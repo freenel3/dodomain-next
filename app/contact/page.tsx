@@ -3,13 +3,6 @@
 import { Mail, MapPin, MessageCircle } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-
-export const metadata = {
-  title: 'Контакты - dodomain',
-  description: 'Свяжитесь с нами по вопросам покупки и продажи доменов. Email, телефон и адрес офиса dodomain в Москве.',
-}
-
-
 export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
