@@ -53,8 +53,9 @@ const posts = {
   }
 }
 
-export default function BlogPost({ params }: { params: { slug: string } }) {
-  const post = posts[params.slug as keyof typeof posts]
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = posts[slug as keyof typeof posts]
   
   if (!post) {
     notFound()

@@ -6,8 +6,9 @@ import Breadcrumbs from '../../components/Breadcrumbs'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 
-export default async function DomainDetail({ params }: { params: { name: string } }) {
-  const domainName = decodeURIComponent(params.name)
+export default async function DomainDetail({ params }: { params: Promise<{ name: string }> }) {
+  const { name } = await params
+  const domainName = decodeURIComponent(name)
   
   const domain = await prisma.domain.findFirst({
     where: { name: domainName }
