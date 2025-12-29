@@ -51,7 +51,7 @@ export default async function BlogPage() {
               </div>
               <p className="text-gray-600 mb-3">{post.excerpt}</p>
               <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span>{new Date(post.publishedDate).toLocaleDateString('ru-RU')}</span>
+                <span>{new Date(post.date).toLocaleDateString('ru-RU')}</span>
                 <span>•</span>
                 <span>{post.readTime}</span>
               </div>
