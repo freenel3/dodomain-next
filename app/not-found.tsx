@@ -1,21 +1,50 @@
 import Link from 'next/link'
+import { Home, Search } from 'lucide-react'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+
+export const metadata = {
+  title: 'Страница не найдена - dodomain',
+  description: 'Запрашиваемая страница не существует',
+}
 
 export default function NotFound() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-24 text-center">
-      <h1 className="text-6xl font-bold text-black mb-4">404</h1>
-      <h2 className="text-2xl font-semibold text-black mb-4">
-        Страница не найдена
-      </h2>
-      <p className="text-gray-600 mb-8">
-        К сожалению, запрашиваемая страница не существует
-      </p>
-      <Link
-        href="/"
-        className="inline-block px-6 py-3 bg-black text-white font-medium hover:bg-gray-800 transition-all"
-      >
-        Вернуться на главную
-      </Link>
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header />
+
+      <div className="flex-1 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="mb-6">
+            <div className="text-8xl font-bold text-black mb-2">404</div>
+            <h1 className="text-2xl font-bold text-black mb-3">
+              Страница не найдена
+            </h1>
+            <p className="text-sm text-gray-600 mb-8">
+              К сожалению, запрашиваемая страница не существует или была перемещена
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Link
+              href="/"
+              className="px-5 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all inline-flex items-center justify-center gap-2"
+            >
+              <Home className="w-4 h-4" />
+              Вернуться на главную
+            </Link>
+            <Link
+              href="/domains"
+              className="px-5 py-2.5 bg-white border border-black text-black text-sm font-medium hover:bg-gray-50 transition-all inline-flex items-center justify-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              Искать домены
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   )
 }

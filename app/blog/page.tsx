@@ -1,64 +1,107 @@
-import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import { Calendar, Clock } from 'lucide-react'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import Breadcrumbs from '../components/Breadcrumbs'
 
 export const metadata = {
   title: 'Блог - dodomain',
-  description: 'Статьи и новости о доменах',
+  description: 'Статьи и новости о доменах, их оценке и продаже',
 }
 
-export default async function BlogPage() {
-  const posts = await prisma.blogPost.findMany({
-    orderBy: {
-      date: 'desc',
-    },
-    take: 20,
-  })
+// Моковые данные для блога
+const blogPosts = [
+  {
+    id: 1,
+    slug: 'kak-ocenit-domen',
+    title: 'Как правильно оценить стоимость домена',
+    excerpt: 'Разбираем ключевые факторы, влияющие на цену доменного имени: длина, зона, история, трафик и коммерческий потенциал.',
+    date: '2024-12-15',
+    readTime: '5 мин',
+    category: 'Инвестиции'
+  },
+  {
+    id: 2,
+    slug: 'luchshie-domennie-zony',
+    title: 'Лучшие доменные зоны для бизнеса в 2024',
+    excerpt: 'Обзор самых популярных и перспективных доменных зон для коммерческих проектов.',
+    date: '2024-12-10',
+    readTime: '4 мин',
+    category: 'Тренды'
+  },
+  {
+    id: 3,
+    slug: 'bezopasnost-sdelok',
+    title: 'Безопасность при покупке премиум доменов',
+    excerpt: 'Как защитить себя от мошенничества и провести сделку безопасно через эскроу-сервисы.',
+    date: '2024-12-05',
+    readTime: '6 мин',
+    category: 'Безопасность'
+  }
+]
 
+export default function Blog() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-black mb-2">Блог</h1>
-        <p className="text-gray-600">
-          Статьи о доменах и инвестициях
-        </p>
-      </div>
+    <div className="min-h-screen bg-white">
+      <Header currentPath="/blog" />
 
-      {posts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">
-            Статьи еще не добавлены.
-          </p>
-          <p className="text-sm text-gray-500">
-            Используйте Prisma Studio для добавления статей:
-            <code className="block mt-2 bg-gray-100 p-2 rounded">
-              npx prisma studio
-            </code>
+      <div className="max-w-3xl mx-auto px-4 py-10">
+        <Breadcrumbs 
+          items={[
+            { label: 'Главная', path: '/' },
+            { label: 'Блог' }
+          ]}
+        />
+
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-black mb-2">Блог dodomain</h1>
+          <p className="text-sm text-gray-600">
+            Статьи, советы и новости о доменах
           </p>
         </div>
-      ) : (
-        <div className="grid gap-6">
-          {posts.map((post) => (
+
+        <div className="space-y-6">
+          {blogPosts.map((post) => (
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
-              className="block border border-gray-200 p-6 hover:border-black transition-all"
+              className="block border border-gray-200 p-5 hover:border-black transition-all"
             >
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <h2 className="text-2xl font-bold text-black">{post.title}</h2>
-                <span className="px-3 py-1 bg-gray-100 text-xs font-medium text-black whitespace-nowrap">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
                   {post.category}
                 </span>
+                <div className="flex items-center gap-3 text-xs text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(post.date).toLocaleDateString('ru-RU')}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {post.readTime}
+                  </div>
+                </div>
               </div>
-              <p className="text-gray-600 mb-3">{post.excerpt}</p>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span>{new Date(post.date).toLocaleDateString('ru-RU')}</span>
-                <span>•</span>
-                <span>{post.readTime}</span>
-              </div>
+              
+              <h2 className="text-xl font-bold text-black mb-2 hover:underline">
+                {post.title}
+              </h2>
+              
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {post.excerpt}
+              </p>
             </Link>
           ))}
         </div>
-      )}
+
+        {blogPosts.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-sm">Статьи скоро появятся</p>
+          </div>
+        )}
+      </div>
+
+      <Footer />
     </div>
   )
 }

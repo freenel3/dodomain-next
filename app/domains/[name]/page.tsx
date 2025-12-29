@@ -1,34 +1,16 @@
+import Link from 'next/link'
+import { ArrowLeft, Globe, TrendingUp, Calendar, Mail } from 'lucide-react'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+import Breadcrumbs from '../../components/Breadcrumbs'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { Calendar, Globe, TrendingUp } from 'lucide-react'
 
-interface Props {
-  params: Promise<{ name: string }>
-}
-
-export async function generateMetadata({ params }: Props) {
-  const { name } = await params
-  const domain = await prisma.domain.findUnique({
-    where: { name }
-  })
-
-  if (!domain) {
-    return {
-      title: 'Домен не найден - dodomain'
-    }
-  }
-
-  return {
-    title: `${domain.name} - dodomain`,
-    description: domain.description
-  }
-}
-
-export default async function DomainDetailPage({ params }: Props) {
-  const { name } = await params
-  const domain = await prisma.domain.findUnique({
-    where: { name },
+export default async function DomainDetail({ params }: { params: { name: string } }) {
+  const domainName = decodeURIComponent(params.name)
+  
+  const domain = await prisma.domain.findFirst({
+    where: { name: domainName }
   })
 
   if (!domain) {
@@ -36,101 +18,84 @@ export default async function DomainDetailPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-          <Link href="/domains" className="hover:text-black">
-            Домены
-          </Link>
-          <span>/</span>
-          <span className="text-black">{domain.name}</span>
-        </div>
-        
-        <h1 className="text-4xl font-bold text-black mb-2">{domain.name}</h1>
-        
-        <div className="flex gap-2">
-          <span className="px-3 py-1 bg-black text-white text-xs font-medium">
-            {domain.category}
-          </span>
-          <span className="px-3 py-1 bg-gray-100 text-black text-xs font-medium">
-            {domain.extension}
-          </span>
-        </div>
-      </div>
+    <div className="min-h-screen bg-white">
+      <Header currentPath="/domains" />
 
-      {/* Price */}
-      <div className="bg-gray-50 border border-gray-200 p-6 mb-8">
-        <div className="text-sm text-gray-600 mb-2">Цена</div>
-        <div className="text-4xl font-bold text-black mb-4">
-          {domain.price.toLocaleString('ru-RU')}₽
-        </div>
-        <Link
-          href="/contact"
-          className="block text-center px-6 py-3 bg-black text-white font-medium hover:bg-gray-800 transition-all"
+      <div className="max-w-2xl mx-auto px-4 py-10">
+        <Breadcrumbs 
+          items={[
+            { label: 'Главная', path: '/' },
+            { label: 'Домены', path: '/domains' },
+            { label: domain.name }
+          ]}
+        />
+
+        <Link 
+          href="/domains"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors mb-6"
         >
-          Купить домен
+          <ArrowLeft className="w-3 h-3" />
+          Назад к доменам
         </Link>
-      </div>
 
-      {/* Description */}
-      {domain.description && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-black mb-3">Описание</h2>
-          <p className="text-gray-600 leading-relaxed">{domain.description}</p>
-        </div>
-      )}
-
-      {/* Details */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold text-black mb-4">Детали домена</h2>
-        
-        <div className="space-y-3">
-          {domain.registeredYear && (
-            <div className="flex items-center gap-3">
-              <Calendar className="w-5 h-5 text-gray-400" />
-              <div>
-                <div className="text-sm text-gray-600">Год регистрации</div>
-                <div className="font-medium text-black">{domain.registeredYear}</div>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center gap-3">
-            <Globe className="w-5 h-5 text-gray-400" />
-            <div>
-              <div className="text-sm text-gray-600">Зона</div>
-              <div className="font-medium text-black">{domain.extension}</div>
+        <div className="border border-gray-200 p-6 mb-6">
+          <div className="flex items-start justify-between mb-4">
+            <span className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
+              {domain.category}
+            </span>
+            <div className="text-3xl font-bold text-black">
+              {domain.price.toLocaleString('ru-RU')} ₽
             </div>
           </div>
 
-          {domain.traffic && (
-            <div className="flex items-center gap-3">
-              <TrendingUp className="w-5 h-5 text-gray-400" />
-              <div>
-                <div className="text-sm text-gray-600">Посещаемость</div>
-                <div className="font-medium text-black">{domain.traffic}</div>
-              </div>
-            </div>
+          <h1 className="text-4xl font-display font-bold text-black mb-4 tracking-tight">
+            {domain.name}
+          </h1>
+
+          <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+            <Globe className="w-4 h-4" />
+            <span>Доменная зона: {domain.extension}</span>
+          </div>
+
+          {domain.description && (
+            <p className="text-gray-700 leading-relaxed mb-6">
+              {domain.description}
+            </p>
           )}
+
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div className="flex items-center gap-2 text-sm">
+              <TrendingUp className="w-4 h-4 text-gray-600" />
+              <span className="text-gray-700">Категория: {domain.category}</span>
+            </div>
+            {domain.traffic && (
+              <div className="flex items-center gap-2 text-sm">
+                <Calendar className="w-4 h-4 text-gray-600" />
+                <span className="text-gray-700">Трафик: {domain.traffic}</span>
+              </div>
+            )}
+          </div>
+
+          <button className="w-full py-3 bg-black text-white font-medium hover:bg-gray-800 transition-all flex items-center justify-center gap-2">
+            <Mail className="w-4 h-4" />
+            Запросить цену
+          </button>
+        </div>
+
+        <div className="border border-gray-200 p-5">
+          <h2 className="text-lg font-bold text-black mb-3">О домене</h2>
+          <div className="space-y-3 text-sm text-gray-700">
+            <p>
+              Премиум доменное имя {domain.name} идеально подходит для проектов в сфере {domain.category.toLowerCase()}.
+            </p>
+            <p>
+              Короткие и запоминающиеся домены — отличная инвестиция в будущее вашего бизнеса.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="bg-black p-8 text-center">
-        <h2 className="text-2xl font-bold text-white mb-3">
-          Заинтересовал этот домен?
-        </h2>
-        <p className="text-gray-300 mb-6">
-          Свяжитесь с нами для обсуждения покупки
-        </p>
-        <Link
-          href="/contact"
-          className="inline-block px-6 py-3 bg-white text-black font-medium hover:bg-gray-100 transition-all"
-        >
-          Связаться с нами
-        </Link>
-      </div>
+      <Footer />
     </div>
   )
 }
