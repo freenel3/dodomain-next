@@ -24,3 +24,32 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Force strong contrast for readability */
+h1, h2, h3, h4, h5, h6 {
+  color: #111111 !important;
+  font-weight: 700 !important;
+}
+
+p {
+  color: #333333 !important;
+}
+
+a {
+  color: #0066cc !important;
+}
+
+a:hover {
+  color: #0052a3 !important;
+}
+
+/* Card styling */
+.border {
+  border-color: #e5e5e5 !important;
+}
+
+/* Override gray text */
+.text-gray-600,
+.text-gray-500 {
+  color: #555555 !important;
+}
