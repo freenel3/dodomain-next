@@ -227,11 +227,11 @@ export default function DomainsClient({ initialDomains }: DomainsClientProps) {
                 <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
                   {domain.category}
                 </div>
-                <div className="text-xl font-bold text-black">
+                <div className="text-xl font-display font-bold text-black tracking-tight">
                   {domain.price.toLocaleString('ru-RU')} ₽
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-black mb-1.5 group-hover:underline">
+              <h3 className="text-2xl font-display font-bold text-black mb-1.5 group-hover:underline tracking-tight">
                 {domain.name}
               </h3>
               <div className="flex items-center gap-1.5 text-gray-600 mb-3">
