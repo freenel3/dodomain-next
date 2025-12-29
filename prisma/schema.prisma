@@ -1,0 +1,54 @@
+// Prisma schema for dodomain project
+// Migrated from Cloudflare D1 (SQLite) to PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Domain {
+  id                     Int       @id @default(autoincrement())
+  name                   String    @unique
+  price                  Int
+  category               String
+  extension              String
+  description            String?
+  registeredYear         String?   @map("registered_year")
+  traffic                String?
+  registrationDate       DateTime? @map("registration_date") @db.Date
+  firstRegistrationDate  DateTime? @map("first_registration_date") @db.Date
+  listedDate             DateTime? @map("listed_date") @db.Date
+  isActive               Boolean   @default(true) @map("is_active")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  @@index([extension])
+  @@index([price])
+  @@index([category])
+  @@index([isActive])
+  @@map("domains")
+}
+
+model BlogPost {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique
+  title         String
+  excerpt       String
+  content       String   @db.Text
+  category      String
+  readTime      String   @map("read_time")
+  publishedDate DateTime @map("published_date") @db.Date
+  isPublished   Boolean  @default(true) @map("is_published")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([category])
+  @@index([isPublished])
+  @@index([publishedDate])
+  @@map("blog_posts")
+}
