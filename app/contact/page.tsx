@@ -1,153 +1,129 @@
 'use client'
 
-import { useState } from 'react'
+import { Mail, MapPin, MessageCircle } from 'lucide-react'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    domainName: '',
-    message: '',
-    type: 'buy' as 'buy' | 'offer',
-  })
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+export const metadata = {
+  title: 'Контакты - dodomain',
+  description: 'Свяжитесь с нами по вопросам покупки и продажи доменов. Email, телефон и адрес офиса dodomain в Москве.',
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
+
+export default function Contact() {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setStatus('loading')
-
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      if (response.ok) {
-        setStatus('success')
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          domainName: '',
-          message: '',
-          type: 'buy',
-        })
-      } else {
-        setStatus('error')
-      }
-    } catch (error) {
-      setStatus('error')
-    }
+    alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.')
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-black mb-4">Контакты</h1>
-      <p className="text-gray-600 mb-8">
-        Заполните форму и мы свяжемся с вами в ближайшее время
-      </p>
+    <div className="min-h-screen bg-white">
+      <Header currentPath="/contact" />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-black mb-2">
-            Имя *
-          </label>
-          <input
-            type="text"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors"
-          />
+      <div className="max-w-2xl mx-auto px-4 py-10">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-black mb-2">
+            Свяжитесь с нами
+          </h1>
+          <p className="text-sm text-gray-600">
+            Мы здесь, чтобы помочь с любыми вопросами о доменах
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-black mb-2">
-            Email *
-          </label>
-          <input
-            type="email"
-            required
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-black mb-2">
-            Телефон
-          </label>
-          <input
-            type="tel"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-black mb-2">
-            Домен *
-          </label>
-          <input
-            type="text"
-            required
-            placeholder="example.com"
-            value={formData.domainName}
-            onChange={(e) => setFormData({ ...formData, domainName: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-black mb-2">
-            Тип запроса *
-          </label>
-          <select
-            value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value as 'buy' | 'offer' })}
-            className="w-full px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors"
-          >
-            <option value="buy">Купить домен</option>
-            <option value="offer">Сделать предложение</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-black mb-2">
-            Сообщение
-          </label>
-          <textarea
-            rows={4}
-            value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={status === 'loading'}
-          className="w-full px-6 py-3 bg-black text-white font-medium hover:bg-gray-800 transition-all disabled:bg-gray-400"
-        >
-          {status === 'loading' ? 'Отправка...' : 'Отправить'}
-        </button>
-
-        {status === 'success' && (
-          <div className="p-4 bg-green-50 border border-green-200 text-green-800">
-            Спасибо! Мы получили вашу заявку и свяжемся с вами в ближайшее время.
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="border border-gray-200 p-4 text-center">
+            <div className="w-10 h-10 bg-black flex items-center justify-center mx-auto mb-3">
+              <Mail className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-sm font-bold text-black mb-1">Email</h3>
+            <a href="mailto:info@dodomain.ru" className="text-xs text-gray-600 hover:text-black transition-colors">
+              info@dodomain.ru
+            </a>
           </div>
-        )}
 
-        {status === 'error' && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-800">
-            Произошла ошибка. Пожалуйста, попробуйте еще раз.
+          <div className="border border-gray-200 p-4 text-center">
+            <div className="w-10 h-10 bg-black flex items-center justify-center mx-auto mb-3">
+              <MessageCircle className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-sm font-bold text-black mb-1">Telegram</h3>
+            <a href="https://t.me/pnlup" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-600 hover:text-black transition-colors">
+              @pnlup
+            </a>
           </div>
-        )}
-      </form>
+
+          <div className="border border-gray-200 p-4 text-center">
+            <div className="w-10 h-10 bg-black flex items-center justify-center mx-auto mb-3">
+              <MapPin className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-sm font-bold text-black mb-1">Адрес</h3>
+            <p className="text-xs text-gray-600">
+              Москва, Россия
+            </p>
+          </div>
+        </div>
+
+        {/* Contact Form */}
+        <div className="border border-gray-200 p-5">
+          <h2 className="text-xl font-bold text-black mb-5">Отправьте сообщение</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-black mb-1.5">
+                  Имя
+                </label>
+                <input
+                  type="text"
+                  placeholder="Иван Петров"
+                  className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-black mb-1.5">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="ivan@example.com"
+                  className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-black mb-1.5">
+                Тема
+              </label>
+              <input
+                type="text"
+                placeholder="Вопрос о покупке домена"
+                className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-black mb-1.5">
+                Сообщение
+              </label>
+              <textarea
+                rows={4}
+                placeholder="Расскажите нам, чем мы можем помочь..."
+                className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all resize-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all"
+            >
+              Отправить сообщение
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   )
 }
