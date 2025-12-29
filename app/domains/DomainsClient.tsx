@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, Globe, Mail } from 'lucide-react'
 
 const ITEMS_PER_PAGE = 20
 
@@ -215,31 +215,42 @@ export default function DomainsClient({ initialDomains }: DomainsClientProps) {
       {/* Domain Grid */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {paginatedDomains.map((domain) => (
-          <Link
+          <div
             key={domain.id}
-            href={`/domains/${encodeURIComponent(domain.name)}`}
-            className="group bg-white border border-gray-200 p-4 hover:border-black transition-all"
+            className="group bg-white border border-gray-200 p-4 hover:border-black transition-all relative"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
-                {domain.category}
+            <Link
+              href={`/domains/${encodeURIComponent(domain.name)}`}
+              className="block"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
+                  {domain.category}
+                </div>
+                <div className="text-xl font-bold text-black">
+                  {domain.price.toLocaleString('ru-RU')} ₽
+                </div>
               </div>
-              <div className="text-xl font-bold text-black">
-                {domain.price.toLocaleString('ru-RU')} ₽
+              <h3 className="text-2xl font-bold text-black mb-1.5 group-hover:underline">
+                {domain.name}
+              </h3>
+              <div className="flex items-center gap-1.5 text-gray-600 mb-3">
+                <Globe className="w-3.5 h-3.5" />
+                <span className="text-xs">домен {domain.extension}</span>
               </div>
-            </div>
-            <h3 className="text-2xl font-bold text-black mb-1.5 group-hover:underline">
-              {domain.name}
-            </h3>
-            <div className="text-xs text-gray-600 mb-2">
-              домен {domain.extension}
-            </div>
-            {domain.description && (
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {domain.description}
-              </p>
-            )}
-          </Link>
+            </Link>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                // Handle price request - можно добавить модалку позже
+                alert(`Запрос цены для ${domain.name}`)
+              }}
+              className="w-full py-2 bg-white border border-black text-black text-xs font-medium hover:bg-black hover:text-white transition-all flex items-center justify-center gap-1.5"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              Запросить цену
+            </button>
+          </div>
         ))}
       </div>
 
