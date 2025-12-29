@@ -3,16 +3,13 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'Блог - dodomain',
-  description: 'Статьи о доменах, инвестициях и digital-маркетинге',
+  description: 'Статьи и новости о доменах',
 }
 
 export default async function BlogPage() {
   const posts = await prisma.blogPost.findMany({
-    where: {
-      isPublished: true,
-    },
     orderBy: {
-      publishedDate: 'desc',
+      date: 'desc',
     },
     take: 20,
   })

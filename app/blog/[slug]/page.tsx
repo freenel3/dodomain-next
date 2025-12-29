@@ -3,27 +3,31 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props) {
+  const { slug } = await params
   const post = await prisma.blogPost.findUnique({
-    where: { slug: params.slug },
+    where: { slug }
   })
 
   if (!post) {
-    return { title: 'Статья не найдена' }
+    return {
+      title: 'Статья не найдена - dodomain'
+    }
   }
 
   return {
     title: `${post.title} - dodomain`,
-    description: post.excerpt,
+    description: post.excerpt
   }
 }
 
 export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
   const post = await prisma.blogPost.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   })
 
   if (!post) {

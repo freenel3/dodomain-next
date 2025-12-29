@@ -2,20 +2,14 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Каталог доменов - dodomain',
-  description: 'Найдите идеальный домен для вашего бизнеса',
+  title: 'Премиум домены - dodomain',
+  description: 'Каталог премиум доменов для вашего бизнеса'
 }
 
 export default async function DomainsPage() {
   // Fetch domains from database
   const domains = await prisma.domain.findMany({
-    where: {
-      isActive: true,
-    },
-    orderBy: {
-      listedDate: 'desc',
-    },
-    take: 50, // Limit to 50 domains for performance
+    orderBy: { price: 'desc' }
   })
 
   return (

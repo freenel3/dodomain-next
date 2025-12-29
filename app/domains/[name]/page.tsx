@@ -4,29 +4,31 @@ import Link from 'next/link'
 import { Calendar, Globe, TrendingUp } from 'lucide-react'
 
 interface Props {
-  params: { name: string }
+  params: Promise<{ name: string }>
 }
 
 export async function generateMetadata({ params }: Props) {
+  const { name } = await params
   const domain = await prisma.domain.findUnique({
-    where: { name: params.name },
+    where: { name }
   })
 
   if (!domain) {
     return {
-      title: 'Домен не найден',
+      title: 'Домен не найден - dodomain'
     }
   }
 
   return {
-    title: `${domain.name} - ${domain.price.toLocaleString('ru-RU')}₽ - dodomain`,
-    description: domain.description || `Купить домен ${domain.name}`,
+    title: `${domain.name} - dodomain`,
+    description: domain.description
   }
 }
 
 export default async function DomainDetailPage({ params }: Props) {
+  const { name } = await params
   const domain = await prisma.domain.findUnique({
-    where: { name: params.name },
+    where: { name },
   })
 
   if (!domain) {
