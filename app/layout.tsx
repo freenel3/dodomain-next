@@ -23,7 +23,6 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`${inter.variable} font-sans antialiased`}>
         <div className="min-h-screen bg-white flex flex-col">
-          <Header />
           <main className="flex-grow">{children}</main>
           <Footer />
         </div>

@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import { Search, HandshakeIcon, Shield, TrendingUp, Users, Award } from 'lucide-react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import Breadcrumbs from '../components/Breadcrumbs'
 
 export const metadata = {
@@ -11,10 +9,7 @@ export const metadata = {
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-white">
-      <Header currentPath="/about" />
-
-      <div className="max-w-3xl mx-auto px-4 py-10">
+    <div className="max-w-3xl mx-auto px-4 py-10">
         <Breadcrumbs 
           items={[
             { label: 'Главная', path: '/' },
@@ -147,8 +142,5 @@ export default function About() {
           </Link>
         </div>
       </div>
-
-      <Footer />
-    </div>
-  )
-}
+    )
+  }
