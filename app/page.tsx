@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { Globe, Shield, TrendingUp } from 'lucide-react'
 import HeroSection from './components/HeroSection'
-import Header from './components/Header'
 
 export const metadata = {
   title: 'dodomain - Премиум площадка доменов',
@@ -11,7 +10,6 @@ export const metadata = {
 export default function HomePage() {
   return (
     <div>
-      <Header currentPath="/" />
       {/* Hero Section */}
       <HeroSection />
 

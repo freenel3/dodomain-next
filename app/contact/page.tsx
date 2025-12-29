@@ -1,8 +1,7 @@
 'use client'
 
 import { Mail, MapPin, MessageCircle } from 'lucide-react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+
 export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -10,10 +9,7 @@ export default function Contact() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header currentPath="/contact" />
-
-      <div className="max-w-2xl mx-auto px-4 py-10">
+    <div className="max-w-2xl mx-auto px-4 py-10">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-black mb-2">
             Свяжитесь с нами
@@ -115,8 +111,5 @@ export default function Contact() {
           </form>
         </div>
       </div>
-
-      <Footer />
-    </div>
   )
 }
