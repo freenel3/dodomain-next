@@ -1,146 +1,258 @@
-import Link from 'next/link'
-import { Search, HandshakeIcon, Shield, TrendingUp, Users, Award } from 'lucide-react'
-import Breadcrumbs from '../components/Breadcrumbs'
+import { Users, Target, Shield, Award, Globe, CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
-  title: 'О нас - dodomain',
-  description: 'dodomain — ведущая платформа по продаже премиум доменных имен. Профессиональные услуги по подбору доменов и доменному брокерству для вашего бизнеса.',
+  title: 'О компании | dodomain',
+  description: 'dodomain — ведущая российская площадка для покупки и продажи премиум доменных имен',
 }
 
-export default function About() {
+const stats = [
+  { value: "500K+", label: "Доменов в каталоге" },
+  { value: "10K+", label: "Успешных продаж" },
+  { value: "98%", label: "Довольных клиентов" },
+  { value: "24/7", label: "Поддержка" },
+];
+
+const values = [
+  {
+    icon: Shield,
+    title: "Безопасность",
+    description:
+      "Все сделки проходят через эскроу-сервис, гарантирующий безопасность для обеих сторон.",
+  },
+  {
+    icon: Users,
+    title: "Клиентоориентированность",
+    description:
+      "Мы ставим интересы клиентов на первое место и всегда готовы помочь.",
+  },
+  {
+    icon: Target,
+    title: "Экспертность",
+    description:
+      "Наши эксперты имеют многолетний опыт работы с доменными именами.",
+  },
+  {
+    icon: Award,
+    title: "Качество",
+    description:
+      "Мы тщательно проверяем все домены перед размещением на площадке.",
+  },
+];
+
+const advantages = [
+  "Безопасные сделки через эскроу",
+  "Экспертная оценка доменов",
+  "Быстрая передача домена",
+  "Поддержка 24/7",
+  "Прозрачные условия",
+  "Конфиденциальность данных",
+];
+
+export default function AboutPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-        <Breadcrumbs 
-          items={[
-            { label: 'Главная', path: '/' },
-            { label: 'О нас' }
-          ]}
-        />
-
-        {/* Hero Section */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-black mb-4">О компании dodomain</h1>
-          <p className="text-lg text-gray-700 leading-relaxed mb-4">
-            dodomain — профессиональная брокерская платформа по реализации премиум доменных имен. 
-            Мы специализируемся на подборе и приобретении доменов высшей категории для бизнеса и инвесторов.
-          </p>
-          <p className="text-base text-gray-700 leading-relaxed mb-4">
-            На платформе представлено более 500 000 доменов. Часть из них принадлежит нашему портфелю, 
-            другая часть — сторонним владельцам. Мы выступаем посредниками и обеспечиваем профессиональное 
-            сопровождение сделок любой сложности.
-          </p>
-          <p className="text-base text-gray-600 leading-relaxed">
-            Независимо от того, кому принадлежит домен, мы гарантируем прозрачность, безопасность 
-            и оперативность всего процесса приобретения.
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            О компании
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            dodomain — ведущая российская площадка для покупки и продажи премиум
+            доменных имен
           </p>
         </div>
 
-        {/* Services */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-black mb-6">Наши услуги</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="border border-gray-200 p-5">
-              <Search className="w-6 h-6 text-black mb-3" />
-              <h3 className="text-lg font-bold text-black mb-2">Подбор доменов</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Индивидуальный подбор доменных имен с учетом специфики бизнеса. 
-                Анализ доступности, брендовой совместимости и коммерческого потенциала.
-              </p>
-            </div>
+        {/* Stats */}
+        <section className="mb-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-gray-600">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-            <div className="border border-gray-200 p-5">
-              <HandshakeIcon className="w-6 h-6 text-black mb-3" />
-              <h3 className="text-lg font-bold text-black mb-2">Брокерские услуги</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Полное сопровождение сделок — от переговоров до трансфера. Работаем как с собственным 
-                портфелем, так и помогаем приобрести домены у третьих лиц.
-              </p>
+        {/* Story */}
+        <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 md:p-12 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Наша история
+              </h2>
+              <div className="space-y-4 text-gray-700">
+                <p>
+                  dodomain была основана в 2020 году группой энтузиастов,
+                  увлеченных доменной индустрией. Мы увидели потребность в
+                  надежной и безопасной площадке для покупки и продажи доменных
+                  имен в России.
+                </p>
+                <p>
+                  За годы работы мы выросли из небольшой команды в ведущую
+                  платформу с каталогом из более чем 500 000 доменов и тысячами
+                  успешных сделок.
+                </p>
+                <p>
+                  Наша миссия — сделать рынок доменов прозрачным, доступным и
+                  безопасным для всех участников, от частных лиц до крупных
+                  корпораций.
+                </p>
+              </div>
             </div>
-
-            <div className="border border-gray-200 p-5">
-              <TrendingUp className="w-6 h-6 text-black mb-3" />
-              <h3 className="text-lg font-bold text-black mb-2">Оценка стоимости</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Профессиональная оценка рыночной стоимости на основе анализа 
-                аналогичных сделок, трафика и истории домена.
-              </p>
-            </div>
-
-            <div className="border border-gray-200 p-5">
-              <Shield className="w-6 h-6 text-black mb-3" />
-              <h3 className="text-lg font-bold text-black mb-2">Безопасность сделок</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Проверенные механизмы эскроу, работа через авторизованных регистраторов, 
-                полное документальное сопровождение.
-              </p>
+            <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-12 flex items-center justify-center">
+              <Globe className="w-48 h-48 text-blue-600" />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Why Choose Us */}
-        <div className="border-t border-gray-200 pt-8 mb-12">
-          <h2 className="text-2xl font-bold text-black mb-6">Наши преимущества</h2>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <Award className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-black mb-1">Профессиональное брокерство</h3>
-                <p className="text-sm text-gray-700">
-                  Помогаем приобрести любой домен — из нашего портфеля или у сторонних владельцев. 
-                  Берем на себя все переговоры и сложности процесса.
-                </p>
+        {/* Values */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Наши ценности
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Принципы, которыми мы руководствуемся в нашей работе
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center"
+                >
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Icon className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {value.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm">{value.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Advantages */}
+        <section className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 md:p-12 text-white mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold mb-6">Почему выбирают нас</h2>
+              <p className="text-blue-100 text-lg mb-8">
+                Мы создали платформу, которая объединяет безопасность, удобство
+                и профессионализм
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {advantages.map((advantage, index) => (
+                  <div key={index} className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                    <span>{advantage}</span>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className="flex gap-4">
-              <Shield className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-black mb-1">Безопасность и надежность</h3>
-                <p className="text-sm text-gray-700">
-                  Полная юридическая защита сделки, проверенные механизмы эскроу, 
-                  работа только через авторизованных регистраторов.
-                </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+                <div className="text-4xl font-bold mb-2">5+</div>
+                <div className="text-blue-100">Лет на рынке</div>
               </div>
-            </div>
-
-            <div className="flex gap-4">
-              <Users className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-black mb-1">Персональное сопровождение</h3>
-                <p className="text-sm text-gray-700">
-                  Работаем с каждым клиентом индивидуально — от первой консультации 
-                  до успешного завершения сделки.
-                </p>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+                <div className="text-4xl font-bold mb-2">50+</div>
+                <div className="text-blue-100">Экспертов</div>
               </div>
-            </div>
-
-            <div className="flex gap-4">
-              <TrendingUp className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-bold text-black mb-1">Прозрачные условия</h3>
-                <p className="text-sm text-gray-700">
-                  Честное ценообразование без скрытых комиссий. 
-                  Все условия обсуждаются и фиксируются до начала работы.
-                </p>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+                <div className="text-4xl font-bold mb-2">100%</div>
+                <div className="text-blue-100">Безопасность</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+                <div className="text-4xl font-bold mb-2">∞</div>
+                <div className="text-blue-100">Возможностей</div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Team */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Наша команда
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Профессионалы с многолетним опытом в доменной индустрии
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Алексей Иванов",
+                position: "CEO",
+                description: "Основатель и visionary с 15-летним опытом в IT",
+              },
+              {
+                name: "Мария Петрова",
+                position: "CTO",
+                description:
+                  "Технический директор, эксперт в области безопасности",
+              },
+              {
+                name: "Дмитрий Сидоров",
+                position: "Head of Sales",
+                description:
+                  "Руководитель отдела продаж, эксперт по оценке доменов",
+              },
+            ].map((member, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center"
+              >
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl font-bold">
+                  {member.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                  {member.name}
+                </h3>
+                <p className="text-blue-600 font-medium mb-3">
+                  {member.position}
+                </p>
+                <p className="text-gray-600 text-sm">{member.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Contact CTA */}
-        <div className="border border-gray-200 p-6 text-center">
-          <h2 className="text-xl font-bold text-black mb-3">Нужна консультация?</h2>
-          <p className="text-sm text-gray-700 mb-4">
-            Свяжитесь с нами для обсуждения вашей задачи. Поможем подобрать домен 
-            или организуем приобретение у текущего владельца.
+        <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 md:p-12 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Готовы начать?
+          </h2>
+          <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+            Свяжитесь с нами, и мы поможем вам найти идеальный домен или продать
+            ваш домен по лучшей цене
           </p>
-          <Link
-            href="/contact"
-            className="inline-block px-6 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all"
-          >
-            Связаться с нами
-          </Link>
-        </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/domains" className="inline-flex items-center justify-center bg-blue-600 text-white px-8 py-4 text-lg rounded-lg font-medium hover:bg-blue-700 transition-colors">
+              Найти домен
+            </Link>
+            <Link href="/contact" className="inline-flex items-center justify-center border-2 border-gray-300 text-gray-700 px-8 py-4 text-lg rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              Связаться с нами
+            </Link>
+          </div>
+        </section>
       </div>
-    )
-  }
+    </div>
+  );
+}
