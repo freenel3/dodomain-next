@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/Input'
 const initialState = {
     success: false,
     message: '',
-    errors: {}
+    errors: undefined
 }
 
 export default function ContactPage() {
@@ -18,7 +18,7 @@ export default function ContactPage() {
   const domainName = searchParams.get('domain') || ''
   const type = searchParams.get('type') || 'offer' // 'buy' or 'offer'
 
-  const [state, formAction, isPending] = useActionState(submitContact, initialState)
+  const [state, formAction, isPending] = useActionState(submitContact, initialState as any)
 
   if (state.success) {
       return (
