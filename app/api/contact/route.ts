@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         {
           success: false,
           error: 'Ошибка валидации',
-          details: error.errors.map((err) => ({
+          details: (error as z.ZodError).errors.map((err) => ({
             field: err.path.join('.'),
             message: err.message,
           })),
