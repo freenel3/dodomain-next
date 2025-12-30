@@ -1,115 +1,102 @@
+
 'use client'
 
-import { Mail, MapPin, MessageCircle } from 'lucide-react'
+import { useActionState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { submitContact } from '@/actions/contact'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 
-export default function Contact() {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.')
+const initialState = {
+    success: false,
+    message: '',
+    errors: {}
+}
+
+export default function ContactPage() {
+  const searchParams = useSearchParams()
+  const domainName = searchParams.get('domain') || ''
+  const type = searchParams.get('type') || 'offer' // 'buy' or 'offer'
+
+  const [state, formAction, isPending] = useActionState(submitContact, initialState)
+
+  if (state.success) {
+      return (
+          <div className="min-h-screen bg-white flex items-center justify-center">
+              <div className="text-center p-8 max-w-md w-full">
+                  <h1 className="text-3xl font-display font-bold mb-4 text-green-600">Спасибо!</h1>
+                  <p className="text-gray-600 mb-8">{state.message}</p>
+                  <Button onClick={() => window.location.href = '/'}>На главную</Button>
+              </div>
+          </div>
+      )
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-black mb-2">
-            Свяжитесь с нами
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow border border-gray-100">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-display font-bold text-gray-900">
+            {type === 'buy' ? 'Покупка домена' : 'Сделать предложение'}
           </h1>
-          <p className="text-sm text-gray-600">
-            Мы здесь, чтобы помочь с любыми вопросами о доменах
-          </p>
+          {domainName && (
+            <p className="mt-2 text-lg font-medium text-black">{domainName}</p>
+          )}
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-10">
-          <div className="border border-gray-200 p-4 text-center">
-            <div className="w-10 h-10 bg-black flex items-center justify-center mx-auto mb-3">
-              <Mail className="w-5 h-5 text-white" />
-            </div>
-            <h3 className="text-sm font-bold text-black mb-1">Email</h3>
-            <a href="mailto:info@dodomain.ru" className="text-xs text-gray-600 hover:text-black transition-colors">
-              info@dodomain.ru
-            </a>
+        <form action={formAction} className="space-y-6">
+          <input type="hidden" name="domainName" value={domainName} />
+          <input type="hidden" name="type" value={type} />
+
+          <Input 
+            label="Ваше имя" 
+            name="name" 
+            id="name" 
+            required 
+            placeholder="Иван Иванов"
+            error={state.errors?.name?.[0]}
+          />
+
+          <Input 
+            label="Email" 
+            name="email" 
+            id="email" 
+            type="email" 
+            required 
+            placeholder="ivan@example.com"
+             error={state.errors?.email?.[0]}
+          />
+
+          <Input 
+            label="Телефон (необязательно)" 
+            name="phone" 
+            id="phone" 
+            type="tel" 
+            placeholder="+7 (999) 123-45-67"
+          />
+
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+              Сообщение (необязательно)
+            </label>
+            <textarea
+              name="message"
+              id="message"
+              rows={4}
+              className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1"
+              placeholder="Дополнительная информация..."
+            />
           </div>
 
-          <div className="border border-gray-200 p-4 text-center">
-            <div className="w-10 h-10 bg-black flex items-center justify-center mx-auto mb-3">
-              <MessageCircle className="w-5 h-5 text-white" />
-            </div>
-            <h3 className="text-sm font-bold text-black mb-1">Telegram</h3>
-            <a href="https://t.me/pnlup" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-600 hover:text-black transition-colors">
-              @pnlup
-            </a>
-          </div>
-
-          <div className="border border-gray-200 p-4 text-center">
-            <div className="w-10 h-10 bg-black flex items-center justify-center mx-auto mb-3">
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
-            <h3 className="text-sm font-bold text-black mb-1">Адрес</h3>
-            <p className="text-xs text-gray-600">
-              Москва, Россия
-            </p>
-          </div>
-        </div>
-
-        {/* Contact Form */}
-        <div className="border border-gray-200 p-5">
-          <h2 className="text-xl font-bold text-black mb-5">Отправьте сообщение</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-black mb-1.5">
-                  Имя
-                </label>
-                <input
-                  type="text"
-                  placeholder="Иван Петров"
-                  className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-black mb-1.5">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="ivan@example.com"
-                  className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-black mb-1.5">
-                Тема
-              </label>
-              <input
-                type="text"
-                placeholder="Вопрос о покупке домена"
-                className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-black mb-1.5">
-                Сообщение
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Расскажите нам, чем мы можем помочь..."
-                className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all resize-none"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all"
-            >
-              Отправить сообщение
-            </button>
-          </form>
-        </div>
+          <Button type="submit" className="w-full" isLoading={isPending}>
+            Отправить запрос
+          </Button>
+            
+            {state.message && !state.success && (
+                <p className="text-center text-red-500 text-sm">{state.message}</p>
+            )}
+        </form>
       </div>
+    </div>
   )
 }

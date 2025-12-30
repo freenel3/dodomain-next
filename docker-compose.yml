@@ -1,0 +1,39 @@
+
+version: '3.8'
+
+services:
+  app:
+    container_name: dodomain-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://dodomain:dodomain_password_2024@db:5432/dodomain
+      - NODE_ENV=production
+    depends_on:
+      - db
+    networks:
+      - dodomain-network
+
+  db:
+    container_name: dodomain-db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=dodomain
+      - POSTGRES_PASSWORD=dodomain_password_2024
+      - POSTGRES_DB=dodomain
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - dodomain-network
+
+networks:
+  dodomain-network:
+    driver: bridge
+
+volumes:
+  db_data:

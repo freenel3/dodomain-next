@@ -52,3 +52,16 @@ model BlogPost {
   @@index([publishedDate])
   @@map("blog_posts")
 }
+
+model ContactRequest {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  phone       String?
+  message     String?
+  domainName  String   @map("domain_name")
+  type        String   // "buy" or "offer"
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("contact_requests")
+}

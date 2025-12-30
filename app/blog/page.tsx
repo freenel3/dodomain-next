@@ -1,98 +1,71 @@
-import Link from 'next/link'
-import { Calendar, Clock } from 'lucide-react'
-import Breadcrumbs from '../components/Breadcrumbs'
 
-export const metadata = {
-  title: 'Блог - dodomain',
-  description: 'Статьи и новости о доменах, их оценке и продаже',
+import { PrismaClient } from '@prisma/client'
+import Link from 'next/link'
+import { Calendar, Clock, ArrowRight } from 'lucide-react'
+
+const prisma = new PrismaClient()
+
+async function getPosts() {
+  const posts = await prisma.blogPost.findMany({
+    where: { isPublished: true },
+    orderBy: { publishedDate: 'desc' },
+  })
+  return posts
 }
 
-const blogPosts = [
-  {
-    id: 1,
-    slug: 'kak-ocenit-domen',
-    title: 'Как правильно оценить стоимость домена',
-    excerpt: 'Разбираем ключевые факторы, влияющие на цену доменного имени: длина, зона, история, трафик и коммерческий потенциал.',
-    date: '2024-12-15',
-    readTime: '5 мин',
-    category: 'Инвестиции'
-  },
-  {
-    id: 2,
-    slug: 'luchshie-domennie-zony',
-    title: 'Лучшие доменные зоны для бизнеса в 2024',
-    excerpt: 'Обзор самых популярных и перспективных доменных зон для коммерческих проектов.',
-    date: '2024-12-10',
-    readTime: '4 мин',
-    category: 'Тренды'
-  },
-  {
-    id: 3,
-    slug: 'bezopasnost-sdelok',
-    title: 'Безопасность при покупке премиум доменов',
-    excerpt: 'Как защитить себя от мошенничества и провести сделку безопасно через эскроу-сервисы.',
-    date: '2024-12-05',
-    readTime: '6 мин',
-    category: 'Безопасность'
-  }
-]
+export const metadata = {
+  title: 'Блог | dodomain',
+  description: 'Статьи и новости о доменной индустрии',
+}
 
-export default function Blog() {
+export default async function BlogPage() {
+  const posts = await getPosts()
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-      <Breadcrumbs 
-        items={[
-          { label: 'Главная', path: '/' },
-          { label: 'Блог' }
-        ]}
-      />
-
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-black mb-2">Блог dodomain</h1>
-        <p className="text-sm text-gray-600">
-          Статьи, советы и новости о доменах
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {blogPosts.map((post) => (
-          <Link
-            key={post.id}
-            href={`/blog/${post.slug}`}
-            className="block border border-gray-200 p-5 hover:border-black transition-all"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <span className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
-                {post.category}
-              </span>
-              <div className="flex items-center gap-3 text-xs text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  {new Date(post.date).toLocaleDateString('ru-RU')}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {post.readTime}
-                </div>
-              </div>
-            </div>
-            
-            <h2 className="text-xl font-bold text-black mb-2 hover:underline">
-              {post.title}
-            </h2>
-            
-            <p className="text-sm text-gray-700 leading-relaxed">
-              {post.excerpt}
-            </p>
-          </Link>
-        ))}
-      </div>
-
-      {blogPosts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-600 text-sm">Статьи скоро появятся</p>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+        <div className="text-center mb-16">
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-gray-900 mb-4 tracking-tight">
+            Блог
+          </h1>
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+            Последние новости, руководства и аналитика рынка доменов.
+          </p>
         </div>
-      )}
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.map((post) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
+              <article className="h-full flex flex-col border border-gray-100 rounded-2xl p-6 hover:border-gray-300 transition-colors bg-gray-50">
+                <div className="mb-4">
+                  <span className="inline-block py-1 px-3 rounded-full bg-white text-xs font-semibold text-black uppercase tracking-wide border border-gray-200">
+                    {post.category}
+                  </span>
+                </div>
+                
+                <h2 className="text-2xl font-display font-bold text-gray-900 mb-3 group-hover:text-black leading-tight">
+                  {post.title}
+                </h2>
+                
+                <p className="text-gray-600 mb-6 flex-grow line-clamp-3">
+                  {post.excerpt}
+                </p>
+
+                <div className="flex items-center text-sm text-gray-400 mt-auto pt-4 border-t border-gray-200/50 space-x-4">
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-1.5" />
+                    {new Date(post.publishedDate).toLocaleDateString('ru-RU')}
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1.5" />
+                    {post.readTime}
+                  </div>
+                </div>
+              </article>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

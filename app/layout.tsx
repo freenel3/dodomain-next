@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,6 +7,11 @@ import Footer from "@/components/Footer";
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-inter",
+});
+
+const lora = Lora({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-lora",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         <div className="min-h-screen bg-white flex flex-col">
           <Header />
           <main className="flex-grow">{children}</main>
