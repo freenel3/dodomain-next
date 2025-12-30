@@ -17,10 +17,6 @@
     --color-gray-900: #111827;
   }
 
-  * {
-    @apply border-border;
-  }
-
   body {
     @apply bg-white text-gray-900 antialiased;
   }

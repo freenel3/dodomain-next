@@ -26,8 +26,20 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME || "dodomain",
   },
 
-  // Оптимизация сборки
-  swcMinify: true,
+  // Настройки webpack для исключения серверных модулей из клиентского бандла
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        dns: false,
+        pg: false,
+      };
+    }
+    return config;
+  },
 
   // Заголовки безопасности
   async headers() {
