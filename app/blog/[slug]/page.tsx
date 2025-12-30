@@ -1,11 +1,8 @@
 import Link from 'next/link'
 import { Calendar, Clock, ArrowLeft } from 'lucide-react'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import { notFound } from 'next/navigation'
 
-// Моковые данные статей
 const posts = {
   'kak-ocenit-domen': {
     title: 'Как правильно оценить стоимость домена',
@@ -62,69 +59,63 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header currentPath="/blog" />
+    <div className="max-w-2xl mx-auto px-4 py-10">
+      <Breadcrumbs 
+        items={[
+          { label: 'Главная', path: '/' },
+          { label: 'Блог', path: '/blog' },
+          { label: post.title }
+        ]}
+      />
 
-      <div className="max-w-2xl mx-auto px-4 py-10">
-        <Breadcrumbs 
-          items={[
-            { label: 'Главная', path: '/' },
-            { label: 'Блог', path: '/blog' },
-            { label: post.title }
-          ]}
-        />
+      <Link 
+        href="/blog"
+        className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors mb-6"
+      >
+        <ArrowLeft className="w-3 h-3" />
+        Назад к блогу
+      </Link>
 
-        <Link 
-          href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors mb-6"
-        >
-          <ArrowLeft className="w-3 h-3" />
-          Назад к блогу
-        </Link>
-
-        <article>
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
-                {post.category}
-              </span>
-              <div className="flex items-center gap-3 text-xs text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  {new Date(post.date).toLocaleDateString('ru-RU')}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {post.readTime}
-                </div>
+      <article>
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
+              {post.category}
+            </span>
+            <div className="flex items-center gap-3 text-xs text-gray-600">
+              <div className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                {new Date(post.date).toLocaleDateString('ru-RU')}
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {post.readTime}
               </div>
             </div>
-
-            <h1 className="text-3xl font-bold text-black mb-4">{post.title}</h1>
           </div>
 
-          <div className="prose prose-sm max-w-none">
-            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {post.content}
-            </div>
-          </div>
-        </article>
+          <h1 className="text-3xl font-bold text-black mb-4">{post.title}</h1>
+        </div>
 
-        <div className="border-t border-gray-200 mt-12 pt-8">
-          <h3 className="text-lg font-bold text-black mb-4">Похожие статьи</h3>
-          <div className="grid gap-4">
-            <Link 
-              href="/blog/kak-ocenit-domen"
-              className="border border-gray-200 p-4 hover:border-black transition-all"
-            >
-              <h4 className="font-bold text-black mb-1 text-sm">Как оценить домен</h4>
-              <p className="text-xs text-gray-600">Ключевые факторы оценки стоимости</p>
-            </Link>
+        <div className="prose prose-sm max-w-none">
+          <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+            {post.content}
           </div>
         </div>
-      </div>
+      </article>
 
-      <Footer />
+      <div className="border-t border-gray-200 mt-12 pt-8">
+        <h3 className="text-lg font-bold text-black mb-4">Похожие статьи</h3>
+        <div className="grid gap-4">
+          <Link 
+            href="/blog/kak-ocenit-domen"
+            className="border border-gray-200 p-4 hover:border-black transition-all"
+          >
+            <h4 className="font-bold text-black mb-1 text-sm">Как оценить домен</h4>
+            <p className="text-xs text-gray-600">Ключевые факторы оценки стоимости</p>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
