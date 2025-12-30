@@ -3,12 +3,14 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { name: string } }
+  { params }: { params: Promise<{ name: string }> }
 ) {
+  const { name } = await params
+
   try {
     const domain = await prisma.domain.findUnique({
       where: {
-        name: params.name,
+        name: name,
       },
     })
 
