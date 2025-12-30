@@ -10,17 +10,14 @@ export default function Header() {
           <Link href="/domains" className="text-gray-900 hover:text-black transition-colors text-sm">
             Домены
           </Link>
-          <Link href="/sell-domain" className="text-gray-900 hover:text-black transition-colors text-sm">
-            Продать
+          <Link href="/categories" className="text-gray-900 hover:text-black transition-colors text-sm">
+            Категории
           </Link>
-          <Link href="/blog" className="text-gray-900 hover:text-black transition-colors text-sm">
-            Блог
-          </Link>
-          <Link href="/about" className="text-gray-900 hover:text-black transition-colors text-sm">
-            О нас
+          <Link href="/faq" className="text-gray-900 hover:text-black transition-colors text-sm">
+            FAQ
           </Link>
           <Link href="/contact" className="text-gray-900 hover:text-black transition-colors text-sm">
-            Контакты
+            Войти
           </Link>
         </nav>
       </div>
