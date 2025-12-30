@@ -6,13 +6,23 @@ import Link from "next/link";
  */
 export default function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2 group">
-      <div className="w-8 h-8 bg-black flex items-center justify-center transition-transform group-hover:scale-105">
-        <span className="text-white font-bold text-sm">D</span>
+    <Link href="/" className="relative group inline-block">
+      <div className="relative flex items-start">
+        <span className="text-2xl font-display font-bold tracking-tighter text-black lowercase">
+          dodom
+        </span>
+        <div className="relative inline-flex flex-col items-center">
+          <span className="text-2xl font-display font-bold tracking-tighter text-black lowercase">
+            a
+          </span>
+          <div className="relative inline-flex flex-col items-center">
+            <div className="w-1.5 h-1.5 bg-red-500 rounded-full mb-0.5 group-hover:scale-125 transition-transform"></div>
+            <span className="text-2xl font-display font-bold tracking-tighter text-black lowercase">
+              in
+            </span>
+          </div>
+        </div>
       </div>
-      <span className="text-xl font-bold text-black tracking-tight">
-        dodomain
-      </span>
     </Link>
   );
 }

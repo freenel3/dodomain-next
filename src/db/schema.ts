@@ -17,7 +17,8 @@ export const domains = pgTable(
   "domains",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 255 }).notNull().unique(),
+    slug: varchar("slug", { length: 255 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
     price: integer("price").notNull(),
     category: varchar("category", { length: 100 }),
     extension: varchar("extension", { length: 20 }),

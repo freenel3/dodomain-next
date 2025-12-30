@@ -92,104 +92,104 @@ export default function DomainFilters({
   };
 
   return (
-    <div className="grid grid-cols-5 gap-3 mb-6">
-      {/* Категория */}
-      <div>
-        <label className="block text-xs font-medium text-black mb-1.5">
-          Категория
-        </label>
-        <CustomSelect
-          value={localFilters.category}
-          onChange={(value) => updateFilters("category", value)}
-          options={[
-            { value: "", label: "Все категории" },
-            ...categories.map((cat) => ({ value: cat, label: cat })),
-          ]}
-          placeholder="Все категории"
-        />
-      </div>
+    <div className="mb-6">
+      <div className="grid grid-cols-5 gap-3">
+        {/* Категория */}
+        <div>
+          <label className="block text-xs font-medium text-black mb-1.5">
+            Категория
+          </label>
+          <CustomSelect
+            value={localFilters.category}
+            onChange={(value) => updateFilters("category", value)}
+            options={[
+              { value: "", label: "Все категории" },
+              ...categories.map((cat) => ({ value: cat, label: cat })),
+            ]}
+            placeholder="Все категории"
+          />
+        </div>
 
-      {/* Зона */}
-      <div>
-        <label className="block text-xs font-medium text-black mb-1.5">
-          Зона
-        </label>
-        <CustomSelect
-          value={localFilters.extension}
-          onChange={(value) => updateFilters("extension", value)}
-          options={[
-            { value: "", label: "Все зоны" },
-            ...extensions.map((ext) => ({ value: ext, label: ext })),
-          ]}
-          placeholder="Все зоны"
-          maxVisibleOptions={5}
-        />
-      </div>
+        {/* Зона */}
+        <div>
+          <label className="block text-xs font-medium text-black mb-1.5">
+            Зона
+          </label>
+          <CustomSelect
+            value={localFilters.extension}
+            onChange={(value) => updateFilters("extension", value)}
+            options={[
+              { value: "", label: "Все зоны" },
+              ...extensions.map((ext) => ({ value: ext, label: ext })),
+            ]}
+            placeholder="Все зоны"
+            maxVisibleOptions={5}
+          />
+        </div>
 
-      {/* Цена от */}
-      <div>
-        <label className="block text-xs font-medium text-black mb-1.5">
-          Цена от
-        </label>
-        <input
-          type="text"
-          placeholder="0"
-          value={localFilters.priceFrom}
-          onChange={handlePriceFromChange}
-          onBlur={() =>
-            updateFilters(
-              "priceFrom",
-              localFilters.priceFrom.replace(/\s/g, "")
-            )
-          }
-          className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-400 focus:outline-none focus:border-black transition-all"
-        />
-      </div>
+        {/* Цена от */}
+        <div>
+          <label className="block text-xs font-medium text-black mb-1.5">
+            Цена от
+          </label>
+          <input
+            type="text"
+            placeholder="0"
+            value={localFilters.priceFrom}
+            onChange={handlePriceFromChange}
+            onBlur={() =>
+              updateFilters(
+                "priceFrom",
+                localFilters.priceFrom.replace(/\s/g, "")
+              )
+            }
+            className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-400 focus:outline-none focus:border-black transition-all"
+          />
+        </div>
 
-      {/* Цена до */}
-      <div>
-        <label className="block text-xs font-medium text-black mb-1.5">
-          Цена до
-        </label>
-        <input
-          type="text"
-          placeholder="∞"
-          value={localFilters.priceTo}
-          onChange={handlePriceToChange}
-          onBlur={() =>
-            updateFilters("priceTo", localFilters.priceTo.replace(/\s/g, ""))
-          }
-          className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-400 focus:outline-none focus:border-black transition-all"
-        />
-      </div>
+        {/* Цена до */}
+        <div>
+          <label className="block text-xs font-medium text-black mb-1.5">
+            Цена до
+          </label>
+          <input
+            type="text"
+            placeholder="∞"
+            value={localFilters.priceTo}
+            onChange={handlePriceToChange}
+            onBlur={() => updateFilters("priceTo", localFilters.priceTo.replace(/\s/g, ""))}
+            className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm placeholder-gray-400 focus:outline-none focus:border-black transition-all"
+          />
+        </div>
 
-      {/* Длина */}
-      <div>
-        <label className="block text-xs font-medium text-black mb-1.5">
-          Длина
-        </label>
-        <select
-          value={localFilters.length}
-          onChange={(e) => updateFilters("length", e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm focus:outline-none focus:border-black transition-all"
-        >
-          <option value="">Любая длина</option>
-          {DOMAIN_LENGTH_FILTERS.map((filter) => (
-            <option key={filter.value} value={filter.value}>
-              {filter.label}
-            </option>
-          ))}
-        </select>
-      </div>
+        {/* Длина */}
+        <div>
+          <label className="block text-xs font-medium text-black mb-1.5">
+            Длина
+          </label>
+          <select
+            value={localFilters.length}
+            onChange={(e) => updateFilters("length", e.target.value)}
+            className="w-full px-3 py-2 bg-white border border-gray-300 text-black text-sm focus:outline-none focus:border-black transition-all"
+          >
+            <option value="">Любая длина</option>
+            {DOMAIN_LENGTH_FILTERS.map((filter) => (
+              <option key={filter.value} value={filter.value}>
+                {filter.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Кнопка сброса */}
-      <div className="flex items-end">
-        <button
-          onClick={resetFilters}
-          className="w-full px-3 py-2 bg-gray-100 text-black text-sm font-medium hover:bg-gray-200 transition-all"
-        >
-          Сбросить
-        </button>
+        {/* Кнопка сброса */}
+        <div className="flex items-end">
+          <button
+            onClick={resetFilters}
+            className="w-full px-3 py-2 bg-gray-100 text-black text-sm font-medium hover:bg-gray-200 transition-all"
+          >
+            Сбросить
+          </button>
+        </div>
       </div>
     </div>
   );

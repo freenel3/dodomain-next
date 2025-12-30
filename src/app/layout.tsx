@@ -1,16 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import { SEO_DEFAULTS } from "@/lib/constants";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
-// Подключаем шрифт Inter с поддержкой кириллицы
+// Подключаем шрифт Inter для текста
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
   display: "swap",
   variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+// Подключаем шрифт Lora для заголовков
+const lora = Lora({
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  variable: "--font-lora",
+  weight: ["400", "500", "600", "700"],
 });
 
 // Метаданные по умолчанию для всего сайта
@@ -89,7 +98,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={inter.variable}>
+    <html lang="ru" className={`${inter.variable} ${lora.variable}`}>
       <head>
         {/* Дополнительные мета-теги */}
         <meta name="format-detection" content="telephone=no" />

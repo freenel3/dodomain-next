@@ -9,9 +9,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['var(--font-lora)', 'Georgia', 'serif'],
-        body: ['var(--font-inter)', 'system-ui', '-apple-system', 'sans-serif'],
-        sans: ['var(--font-inter)', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['var(--font-lora)', 'Lora', 'Georgia', 'serif'],
+        body: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       letterSpacing: {
         tighter: '-0.04em',
