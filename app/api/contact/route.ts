@@ -7,9 +7,7 @@ const contactSchema = z.object({
   phone: z.string().optional(),
   message: z.string().optional(),
   domainName: z.string().min(1, 'Имя домена обязательно'),
-  type: z.enum(['buy', 'offer'], {
-    errorMap: () => ({ message: 'Тип должен быть buy или offer' }),
-  }),
+  type: z.enum(['buy', 'offer']),
 })
 
 export async function POST(request: Request) {
