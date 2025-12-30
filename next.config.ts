@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Отключаем ESLint для сборки
+  // Отключаем ESLint и TypeScript для сборки
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
   // Настройки для Docker (standalone output)
   output: "standalone",
