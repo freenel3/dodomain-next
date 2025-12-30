@@ -1,7 +1,6 @@
-
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { submitContact } from '@/actions/contact'
 import { Button } from '@/components/ui/Button'
@@ -13,7 +12,7 @@ const initialState = {
     errors: undefined
 }
 
-export default function ContactPage() {
+function ContactForm() {
   const searchParams = useSearchParams()
   const domainName = searchParams.get('domain') || ''
   const type = searchParams.get('type') || 'offer' // 'buy' or 'offer'
@@ -98,5 +97,13 @@ export default function ContactPage() {
         </form>
       </div>
     </div>
+  )
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Загрузка...</div>}>
+      <ContactForm />
+    </Suspense>
   )
 }
