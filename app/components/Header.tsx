@@ -18,28 +18,22 @@ export default function Header({ currentPath }: HeaderProps) {
             Домены
           </Link>
           <Link 
-            href="/sell-domain" 
-            className={`transition-colors text-sm ${currentPath === '/sell-domain' ? 'text-black font-medium' : 'text-gray-900 hover:text-black'}`}
+            href="/categories" 
+            className={`transition-colors text-sm ${currentPath === '/categories' ? 'text-black font-medium' : 'text-gray-900 hover:text-black'}`}
           >
-            Продать
+            Категории
           </Link>
           <Link 
-            href="/blog" 
-            className={`transition-colors text-sm ${currentPath === '/blog' ? 'text-black font-medium' : 'text-gray-900 hover:text-black'}`}
+            href="/faq" 
+            className={`transition-colors text-sm ${currentPath === '/faq' ? 'text-black font-medium' : 'text-gray-900 hover:text-black'}`}
           >
-            Блог
-          </Link>
-          <Link 
-            href="/about" 
-            className={`transition-colors text-sm ${currentPath === '/about' ? 'text-black font-medium' : 'text-gray-900 hover:text-black'}`}
-          >
-            О нас
+            FAQ
           </Link>
           <Link 
             href="/contact" 
-            className={`transition-colors text-sm ${currentPath === '/contact' ? 'text-black font-medium' : 'text-gray-900 hover:text-black'}`}
+            className="transition-colors text-sm text-gray-900 hover:text-black"
           >
-            Контакты
+            Войти
           </Link>
         </nav>
       </div>

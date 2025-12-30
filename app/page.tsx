@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { Search } from 'lucide-react'
 
 export const metadata = {
-  title: 'dodomain. - Премиум домены',
-  description: 'Покупайте и продавайте премиум-домены',
+  title: 'dodomain. - Домены для вашего будущего',
+  description: 'Найдите идеальное доменное имя среди тысяч проверенных предложений',
 }
 
 // Тестовые данные доменов
@@ -27,7 +27,7 @@ export default function HomePage() {
       <section className="bg-white py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-display font-bold text-black mb-6 tracking-tighter">
-            Премиум домены для вашего бизнеса
+            Домены для вашего будущего
           </h1>
           <p className="text-lg text-gray-500 mb-10 max-w-2xl mx-auto font-light">
             Найдите идеальное доменное имя среди тысяч проверенных предложений
@@ -54,7 +54,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-2xl font-display font-bold text-black tracking-tight">
-              Избранные домены
+              Популярные домены
             </h2>
             <Link 
               href="/domains" 
