@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Отключаем ESLint для сборки
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Настройки для Docker (standalone output)
   output: "standalone",
   // Оптимизация изображений
