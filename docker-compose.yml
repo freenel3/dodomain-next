@@ -1,0 +1,92 @@
+services:
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:15-alpine
+    container_name: dodomain-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dodomain}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dodomain_password}
+      POSTGRES_DB: ${POSTGRES_DB:-dodomain}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/var/lib/postgresql/backups
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - dodomain-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dodomain}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js приложение
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dodomain-nextjs
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dodomain}:${POSTGRES_PASSWORD:-dodomain_password}@postgres:5432/${POSTGRES_DB:-dodomain}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-https://dodomain.ru}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dodomain-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: dodomain-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - nextjs
+    networks:
+      - dodomain-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  dodomain-network:
+    driver: bridge

@@ -1,0 +1,39 @@
+# Googlebot
+User-agent: Googlebot
+Allow: /
+Allow: /blog
+Allow: /domains$ 
+Allow: /domains/*
+Allow: /contact
+Allow: /sell-domain
+Allow: /about
+Disallow: /blog?
+Disallow: /domains?
+Disallow: /hltdot
+Disallow: /admin-dashboard
+Disallow: /admin*
+Disallow: /faq
+Disallow: /terms
+Disallow: /privacy
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Allow: /blog
+Allow: /domains$ 
+Allow: /domains/*
+Allow: /contact
+Allow: /sell-domain
+Allow: /about
+Disallow: /blog?
+Disallow: /domains?
+Disallow: /hltdot
+Disallow: /admin-dashboard
+Disallow: /admin*
+Disallow: /faq
+Disallow: /terms
+Disallow: /privacy
+
+
+User-agent: *
+Disallow: /

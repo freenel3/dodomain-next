@@ -1,0 +1,11 @@
+{
+  "name": "Маркетплейс премиум доменов - dodomain ,
+  "short_name": "dodomain",
+  "description": "Покупайте и продавайте премиум-домены",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": []
+}
