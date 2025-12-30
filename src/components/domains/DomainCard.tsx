@@ -25,13 +25,8 @@ export default function DomainCard({ domain }: DomainCardProps) {
         href={`/domains/${encodeURIComponent(domain.name)}`}
         className="block"
       >
-        {/* Header с категорией и ценой */}
+        {/* Header с ценой */}
         <div className="flex items-start justify-between mb-3">
-          {domain.category && (
-            <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
-              {domain.category}
-            </div>
-          )}
           <div className="text-xl font-display font-bold text-black tracking-tight">
             {formatPrice(domain.price)}
           </div>

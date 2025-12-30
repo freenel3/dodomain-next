@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import { SEO_DEFAULTS } from "@/lib/constants";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
 // Подключаем шрифт Inter для текста
@@ -115,9 +113,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <Header />
         <main>{children}</main>
-        <Footer />
         <ScrollToTop />
       </body>
     </html>

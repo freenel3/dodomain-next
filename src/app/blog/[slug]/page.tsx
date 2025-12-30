@@ -8,7 +8,6 @@ import { eq, sql, desc } from "drizzle-orm";
 import { formatDate, getSimilarDomains } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Calendar, Clock, Share2, Globe, ArrowRight } from "lucide-react";
 
 // Тип для статьи из БД
@@ -315,8 +314,6 @@ export default function BlogPostPage() {
           </div>
         )}
       </div>
-      
-      <Footer />
     </div>
   );
 }

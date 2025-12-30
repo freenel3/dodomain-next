@@ -10,7 +10,6 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogGrid from "@/components/blog/BlogGrid";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 // Тип для статьи из БД
 interface BlogPost {
@@ -203,8 +202,6 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
           </BlogGrid>
         )}
       </div>
-      
-      <Footer />
     </div>
   );
 }

@@ -9,7 +9,6 @@ import { formatPrice, getSimilarDomains, getFullUrl } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ContactModal from "@/components/ui/ContactModal";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import {
   Globe,
   Calendar,
@@ -333,8 +332,6 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
             </div>
           </div>
         </div>
-        
-        <Footer />
       </div>
     </>
   );

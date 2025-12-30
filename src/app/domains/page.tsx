@@ -11,7 +11,6 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import DomainFilters from "@/components/domains/DomainFilters";
 import DomainCard from "@/components/domains/DomainCard";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Тип для домена из БД
@@ -295,8 +294,6 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
           </div>
         )}
       </div>
-      
-      <Footer />
     </div>
   );
 }
