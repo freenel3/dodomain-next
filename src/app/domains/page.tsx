@@ -18,8 +18,8 @@ interface Domain {
   slug: string;
   name: string;
   price: number;
-  category: string;
-  extension: string;
+  category: string | null;
+  extension: string | null;
   description: string | null;
   registeredYear: number | null;
   traffic: string | null;
@@ -237,7 +237,7 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
         </div>
 
         {/* Domain Grid */}
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           {paginatedDomains.length > 0 ? (
             paginatedDomains.map((domain) => (
               <DomainCard key={domain.slug} domain={domain} />

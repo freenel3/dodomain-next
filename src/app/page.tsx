@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Globe, TrendingUp, Shield, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { db } from "@/db";
 import { domains, blogPosts } from "@/db";
 import { desc, sql, eq } from "drizzle-orm";
-import { formatPrice } from "@/lib/utils";
 import { PAGINATION } from "@/lib/constants";
+import { formatPrice } from "@/lib/utils";
 import DomainCard from "@/components/domains/DomainCard";
 
 /**
@@ -23,7 +23,7 @@ export default function Home() {
   const router = useRouter();
 
   // Загрузка топ-доменов и последних статей при монтировании
-  useState(() => {
+  useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
@@ -33,7 +33,7 @@ export default function Home() {
           .select()
           .from(domains)
           .where(sql`${domains.isActive} = true`)
-          .orderBy(desc(domains.price))
+          .orderBy(desc(domains.listedDate))
           .limit(8);
 
         setFeaturedDomains(topDomains);
@@ -171,7 +171,7 @@ export default function Home() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {featuredDomains.map((domain) => (
-                <DomainCard key={domain.name} domain={domain} />
+                <DomainCard key={domain.slug} domain={domain} />
               ))}
             </div>
           )}
