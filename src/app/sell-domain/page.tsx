@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { DollarSign, Clock, Shield, Check, TrendingUp } from 'lucide-react';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { submitContactForm } from '@/app/actions';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export default function SellDomain() {
   const [state, formAction, isPending] = useActionState(submitContactForm, {
@@ -27,9 +29,11 @@ export default function SellDomain() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Header />
+      
       {/* Hero Section */}
       <div className="max-w-2xl mx-auto px-4 py-10">
-        <Breadcrumbs 
+        <Breadcrumbs
           items={[
             { label: 'Главная', path: '/' },
             { label: 'Продать домен' }
@@ -247,6 +251,8 @@ export default function SellDomain() {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

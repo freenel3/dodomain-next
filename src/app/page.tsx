@@ -10,6 +10,8 @@ import { desc, sql, eq } from "drizzle-orm";
 import { PAGINATION } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
 import DomainCard from "@/components/domains/DomainCard";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 /**
  * Главная страница
@@ -72,6 +74,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Header />
+      
       {/* Hero Section */}
       <section className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
@@ -309,6 +313,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 }

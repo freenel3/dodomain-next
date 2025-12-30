@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { CONTACT_INFO } from '@/lib/constants';
 import { submitContactForm } from '@/app/actions';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 /**
  * Страница контактов
@@ -32,7 +34,9 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumbs 
+      <Header />
+      
+      <Breadcrumbs
         items={[
           { label: 'Главная', path: '/' },
           { label: 'Контакты' }
@@ -185,6 +189,8 @@ export default function Contact() {
           </form>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

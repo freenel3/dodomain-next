@@ -10,6 +10,8 @@ import { formatPrice } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import DomainFilters from "@/components/domains/DomainFilters";
 import DomainCard from "@/components/domains/DomainCard";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Тип для домена из БД
@@ -25,10 +27,10 @@ interface Domain {
   traffic: string | null;
   registrationDate: Date | null;
   firstRegistrationDate: Date | null;
-  listedDate: Date;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  listedDate: Date | null;
+  isActive: boolean | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 interface DomainsPageProps {
@@ -55,10 +57,10 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
 
   // Получаем уникальные категории и расширения
   const categories = Array.from(
-    new Set(allDomains.map((d) => d.category).filter(Boolean))
+    new Set(allDomains.map((d) => d.category).filter((c): c is string => Boolean(c)))
   );
   const extensions = Array.from(
-    new Set(allDomains.map((d) => d.extension).filter(Boolean))
+    new Set(allDomains.map((d) => d.extension).filter((e): e is string => Boolean(e)))
   );
 
   // Загрузка доменов из БД
@@ -175,19 +177,8 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b border-gray-200 bg-white sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <nav className="flex gap-6 items-center">
-            <a href="/domains" className="text-black font-medium transition-colors text-sm">Домены</a>
-            <a href="/sell-domain" className="text-gray-900 hover:text-black transition-colors text-sm">Продать</a>
-            <a href="/blog" className="text-gray-900 hover:text-black transition-colors text-sm">Блог</a>
-            <a href="/about" className="text-gray-900 hover:text-black transition-colors text-sm">О нас</a>
-            <a href="/contact" className="text-gray-900 hover:text-black transition-colors text-sm">Контакты</a>
-          </nav>
-        </div>
-      </header>
-
+      <Header />
+      
       <Breadcrumbs
         items={[{ label: "Главная", path: "/" }, { label: "Домены" }]}
       />
@@ -303,69 +294,9 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
             </button>
           </div>
         )}
-
-        {/* Footer */}
-        <footer className="border-t border-gray-200 mt-12">
-          <div className="max-w-4xl mx-auto px-4 py-8">
-            <div className="grid grid-cols-4 gap-6 mb-6">
-              <div>
-                <a href="/" className="flex items-center gap-2 group">
-                  <div className="w-8 h-8 bg-black flex items-center justify-center transition-transform group-hover:scale-105">
-                    <span className="text-white font-bold text-sm">D</span>
-                  </div>
-                  <span className="text-xl font-bold text-black tracking-tight">dodomain</span>
-                </a>
-                <p className="text-xs text-gray-600 mt-2">
-                  Ведущая площадка доменов
-                </p>
-              </div>
-              <div>
-                <h4 className="text-black font-bold mb-2 text-xs">Площадка</h4>
-                <ul className="space-y-1.5">
-                  <li>
-                    <a href="/domains" className="text-gray-600 hover:text-black transition-colors text-xs">
-                      Все домены
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/sell-domain" className="text-gray-600 hover:text-black transition-colors text-xs">
-                      Продать домен
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-black font-bold mb-2 text-xs">Ресурсы</h4>
-                <ul className="space-y-1.5">
-                  <li>
-                    <a href="/blog" className="text-gray-600 hover:text-black transition-colors text-xs">
-                      Блог
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-black font-bold mb-2 text-xs">Компания</h4>
-                <ul className="space-y-1.5">
-                  <li>
-                    <a href="/about" className="text-gray-600 hover:text-black transition-colors text-xs">
-                      О нас
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/contact" className="text-gray-600 hover:text-black transition-colors text-xs">
-                      Контакты
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="border-t border-gray-200 pt-4 text-center text-xs text-gray-600">
-              © 2024 dodomain. Все права защищены.
-            </div>
-          </div>
-        </footer>
       </div>
+      
+      <Footer />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Search, Handshake, Shield, TrendingUp, Users, Award } from 'lucide-react';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 /**
  * Страница "О нас"
@@ -9,7 +11,9 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 export default function About() {
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumbs 
+      <Header />
+      
+      <Breadcrumbs
         items={[
           { label: 'Главная', path: '/' },
           { label: 'О нас' }
@@ -150,6 +154,8 @@ export default function About() {
           </Link>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }
