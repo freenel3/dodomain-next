@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/var/lib/postgresql/backups
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     networks:
       - dodomain-network
     healthcheck:
@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://${POSTGRES_USER:-dodomain}:${POSTGRES_PASSWORD:-dodomain_password}@postgres:5432/${POSTGRES_DB:-dodomain}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dodomain}:${POSTGRES_PASSWORD:-dodomain_password}@postgres:5433/${POSTGRES_DB:-dodomain}
       NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-https://dodomain.ru}
     ports:
       - "3000:3000"
