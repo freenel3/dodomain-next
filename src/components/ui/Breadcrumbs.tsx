@@ -1,47 +1,34 @@
 import Link from "next/link";
 
-interface BreadcrumbItem {
-  label: string;
-  path?: string;
-}
-
 interface BreadcrumbsProps {
-  items: BreadcrumbItem[];
-  className?: string;
+  items: {
+    label: string;
+    path?: string;
+  }[];
 }
 
-/**
- * Хлебные крошки для навигации
- * Server Component - статичный контент
- */
-export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
+export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav className={className} aria-label="Навигация">
-      <ol className="flex items-center gap-2 text-sm">
-        {items.map((item, index) => (
-          <li key={index} className="flex items-center gap-2">
-            {index > 0 && (
-              <div className="w-1 h-3 bg-gray-400 flex-shrink-0" />
-            )}
+    <nav className="flex items-center text-sm text-gray-500 mb-8 mt-4">
+      {items.map((item, index) => {
+        const isLast = index === items.length - 1;
 
-            {item.path ? (
+        return (
+          <div key={index} className="flex items-center">
+            {index > 0 && <span className="mx-2 text-gray-400">/</span>}
+            {item.path && !isLast ? (
               <Link
                 href={item.path}
-                className={cn(
-                  "transition-colors",
-                  index === items.length - 1
-                    ? "text-black font-medium"
-                    : "text-gray-600 hover:text-black"
-                )}
+                className="hover:text-black transition-colors"
               >
                 {item.label}
               </Link>
             ) : (
-              <span className="text-black font-medium">{item.label}</span>
+              <span className={isLast ? "text-gray-900" : ""}>{item.label}</span>
             )}
-          </li>
-        ))}
-      </ol>
+          </div>
+        );
+      })}
     </nav>
   );
 }

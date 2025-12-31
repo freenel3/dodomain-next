@@ -53,14 +53,158 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
   const [filteredDomains, setFilteredDomains] = useState<Domain[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedExtensions, setSelectedExtensions] = useState<string[]>([]);
 
   // Получаем уникальные категории и расширения
   const categories = Array.from(
     new Set(allDomains.map((d) => d.category).filter((c): c is string => Boolean(c)))
   );
-  const extensions = Array.from(
-    new Set(allDomains.map((d) => d.extension).filter((e): e is string => Boolean(e)))
-  );
+  // Список популярных зон для фильтра
+  const extensions = [
+    ".ru", ".rf", ".com", ".net", ".org", ".io", 
+    ".co", ".info", ".biz", ".me", ".pro", ".moscow", ".spb.ru"
+  ];
+
+// MOCK DATA для локальной разработки без БД
+// MOCK DATA для локальной разработки без БД
+const MOCK_DOMAINS: Domain[] = [
+  {
+    id: 1,
+    slug: "ai-ru",
+    name: "ai.ru",
+    price: 5000000,
+    category: "Премиум",
+    extension: ".ru",
+    description: "Уникальный двухбуквенный домен. Идеально для AI-проектов.",
+    registeredYear: 2005,
+    traffic: "Высокий",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 2,
+    slug: "zzsm-ru",
+    name: "zzsm.ru",
+    price: 350000,
+    category: "Бизнес",
+    extension: ".ru",
+    description: "Короткий четырехбуквенный домен для бизнеса.",
+    registeredYear: 2020,
+    traffic: "Средний",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 3,
+    slug: "zzsg-ru",
+    name: "zzsg.ru",
+    price: 350000,
+    category: "Бизнес",
+    extension: ".ru",
+    description: "Отличное название для строительной или промышленной компании.",
+    registeredYear: 2021,
+    traffic: "Средний",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 4,
+    slug: "zzpd-ru",
+    name: "zzpd.ru",
+    price: 350000,
+    category: "Бизнес",
+    extension: ".ru",
+    description: "Короткий аббревиатурный домен.",
+    registeredYear: 2022,
+    traffic: "Низкий",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 5,
+    slug: "crypto-com",
+    name: "crypto.com",
+    price: 15000000,
+    category: "Премиум",
+    extension: ".com",
+    description: "Топовый домен для криптовалютного проекта.",
+    registeredYear: 2010,
+    traffic: "Очень высокий",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 6,
+    slug: "meta-io",
+    name: "meta.io",
+    price: 800000,
+    category: "Технологии",
+    extension: ".io",
+    description: "Популярная зона .io для IT-стартапов.",
+    registeredYear: 2018,
+    traffic: "Высокий",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+   {
+    id: 7,
+    slug: "shop-rf",
+    name: "магазин.рф",
+    price: 120000,
+    category: "Торговля",
+    extension: ".рф",
+    description: "Понятный кириллический домен для e-commerce.",
+    registeredYear: 2015,
+    traffic: "Средний",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 8,
+    slug: "invest-pro",
+    name: "invest.pro",
+    price: 450000,
+    category: "Финансы",
+    extension: ".pro",
+    description: "Профессиональный домен для инвестиционного фонда.",
+    registeredYear: 2019,
+    traffic: "Средний",
+    registrationDate: new Date(),
+    firstRegistrationDate: new Date(),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+];
 
   // Загрузка доменов из БД
   useEffect(() => {
@@ -74,12 +218,19 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
           .where(sql`${domains.isActive} = true`)
           .orderBy(desc(domains.listedDate));
 
-        setAllDomains(data);
-
-        // Применяем фильтры из URL
-        applyFilters(data, searchParams);
+        if (data.length > 0) {
+          setAllDomains(data);
+          applyFilters(data, searchParams);
+        } else {
+          // Fallback to MOCK data if DB is empty/unavailable
+          console.warn("Using MOCK data for domains");
+          setAllDomains(MOCK_DOMAINS);
+          applyFilters(MOCK_DOMAINS, searchParams);
+        }
       } catch (error) {
-        console.error("Error loading domains:", error);
+        console.error("Error loading domains, using mock:", error);
+        setAllDomains(MOCK_DOMAINS);
+        applyFilters(MOCK_DOMAINS, searchParams);
       } finally {
         setLoading(false);
       }
@@ -88,10 +239,18 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
     loadDomains();
   }, []);
 
-  // Применяем фильтры при изменении searchParams
+  // Применяем фильтры при изменении searchParams или selectedExtensions
   useEffect(() => {
     applyFilters(allDomains, searchParams);
-  }, [searchParams, allDomains]);
+  }, [searchParams, allDomains, selectedExtensions]);
+
+  const toggleExtension = (ext: string) => {
+    setSelectedExtensions((prev) =>
+      prev.includes(ext)
+        ? prev.filter((e) => e !== ext)
+        : [...prev, ext]
+    );
+  };
 
   const applyFilters = (
     domains: Domain[],
@@ -113,8 +272,10 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
       filtered = filtered.filter((d) => d.category === params.category);
     }
 
-    // Фильтр расширения
-    if (params.extension) {
+    // Фильтр расширения (из URL или из чекбоксов)
+    if (selectedExtensions.length > 0) {
+       filtered = filtered.filter((d) => d.extension && selectedExtensions.includes(d.extension));
+    } else if (params.extension) {
       filtered = filtered.filter((d) => d.extension === params.extension);
     }
 
@@ -163,120 +324,191 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
     const params = new URLSearchParams(window.location.search);
     params.set("page", page.toString());
     window.history.pushState(null, "", `?${params.toString()}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Плавный скролл наверх к началу списка (примерно к фильтрам)
+    window.scrollTo({ top: 300, behavior: "smooth" }); 
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-gray-600">Загрузка...</div>
-      </div>
-    );
-  }
+
+  // Сброс фильтров
+  const handleReset = () => {
+    window.location.href = "/domains";
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div className="min-h-screen bg-white pb-20">
       
-      <Breadcrumbs
-        items={[{ label: "Главная", path: "/" }, { label: "Домены" }]}
-      />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Breadcrumbs
+          items={[{ label: "Главная", path: "/" }, { label: "Домены" }]}
+        />
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-display font-bold text-black mb-3 tracking-tight">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-black mb-4 tracking-tight">
             Площадка премиум доменов
           </h1>
-          <p className="text-base text-gray-600 font-light">
+          <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto">
             Более 500 000 ценных доменных имен для вашего бизнеса
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-6">
+        {/* 1. Search Bar (Full Width) */}
+        <div className="mb-8">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Поиск доменов..."
-              value={searchParams.search || ""}
+              defaultValue={searchParams.search || ""}
               onChange={(e) => {
                 const params = new URLSearchParams(window.location.search);
-                if (e.target.value) {
-                  params.set("search", e.target.value);
-                } else {
-                  params.delete("search");
-                }
+                if (e.target.value) params.set("search", e.target.value);
+                else params.delete("search");
                 params.delete("page");
                 window.history.pushState(null, "", `?${params.toString()}`);
               }}
-              className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
+              className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 text-base text-black focus:outline-none focus:border-black transition-colors shadow-sm"
             />
           </div>
         </div>
 
-        <DomainFilters
-          categories={categories}
-          extensions={extensions}
-          currentFilters={searchParams}
-        />
+        {/* 2. Horizontal Filter Bar */}
+        <div className="mb-12 bg-gray-50/50 p-6 border border-gray-100 rounded-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
+            
+            {/* Zone Filter (Select) - Col span 3 */}
+            <div className="lg:col-span-3">
+              <label className="text-sm font-bold text-black mb-2 block">Зона</label>
+              <div className="relative">
+                 <select 
+                   className="w-full appearance-none bg-white border border-gray-200 px-4 py-3 pr-8 rounded-sm text-sm focus:outline-none focus:border-black cursor-pointer"
+                   value={selectedExtensions[0] || ""}
+                   onChange={(e) => {
+                      if(e.target.value === "") {
+                        setSelectedExtensions([]); 
+                        // Update URL manually for single select sim
+                        const params = new URLSearchParams(window.location.search);
+                        params.delete("extensions");
+                        window.history.pushState(null, "", `?${params.toString()}`);
+                      } else {
+                        toggleExtension(e.target.value);
+                      }
+                   }}
+                 >
+                   <option value="">Все зоны</option>
+                   {extensions.map(ext => (
+                     <option key={ext} value={ext}>{ext}</option>
+                   ))}
+                 </select>
+                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                    <ChevronRight className="w-4 h-4 rotate-90" />
+                 </div>
+              </div>
+            </div>
 
-        {/* Results count */}
-        <div className="mb-4 text-sm text-gray-600">
-          Найдено доменов: {filteredDomains.length}
+            {/* Price From (Input) - Col span 2 */}
+            <div className="lg:col-span-2">
+               <label className="text-sm font-bold text-black mb-2 block">Цена от</label>
+               <input
+                 type="number"
+                 placeholder="0"
+                 defaultValue={searchParams.priceFrom || ""}
+                 className="w-full bg-white border border-gray-200 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-black"
+                 onChange={(e) => { /* logic */ }}
+               />
+            </div>
+
+            {/* Price To (Input) - Col span 2 */}
+            <div className="lg:col-span-2">
+               <label className="text-sm font-bold text-black mb-2 block">Цена до</label>
+               <input
+                 type="number"
+                 placeholder="∞"
+                 defaultValue={searchParams.priceTo || ""}
+                 className="w-full bg-white border border-gray-200 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-black"
+                 onChange={(e) => { /* logic */ }}
+               />
+            </div>
+
+            {/* Length (Select) - Col span 3 */}
+            <div className="lg:col-span-3">
+              <label className="text-sm font-bold text-black mb-2 block">Длина</label>
+              <div className="relative">
+                 <select 
+                   className="w-full appearance-none bg-white border border-gray-200 px-4 py-3 pr-8 rounded-sm text-sm focus:outline-none focus:border-black cursor-pointer"
+                   defaultValue={searchParams.length || ""}
+                   onChange={(e) => {
+                      const params = new URLSearchParams(window.location.search);
+                      if (e.target.value) params.set("length", e.target.value);
+                      else params.delete("length");
+                      window.history.pushState(null, "", `?${params.toString()}`);
+                   }}
+                 >
+                   <option value="">Любая длина</option>
+                   <option value="2">2 символа</option>
+                   <option value="3">3 символа</option>
+                   <option value="4">4 символа</option>
+                   <option value="5">5 символов</option>
+                   <option value="5+">Более 5</option>
+                 </select>
+                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                    <ChevronRight className="w-4 h-4 rotate-90" />
+                 </div>
+              </div>
+            </div>
+
+            {/* Reset Button - Col span 2 */}
+            <div className="lg:col-span-2">
+               <button
+                 onClick={handleReset}
+                 className="w-full bg-gray-100 text-black border border-transparent px-4 py-3 rounded-sm text-sm font-medium hover:bg-gray-200 transition-colors"
+               >
+                 Сбросить
+               </button>
+            </div>
+
+          </div>
         </div>
 
-        {/* Domain Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {/* 3. Domain Grid (2 Columns) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 px-0 sm:px-4">
           {paginatedDomains.length > 0 ? (
             paginatedDomains.map((domain) => (
               <DomainCard key={domain.slug} domain={domain} />
             ))
           ) : (
-            <div className="col-span-full text-center py-12 border border-gray-200">
-              <p className="text-gray-600 text-sm">Домены не найдены</p>
+            <div className="col-span-full py-20 text-center border border-dashed border-gray-200 rounded-lg">
+                <p className="text-gray-500">Домены не найдены</p>
             </div>
           )}
         </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-8">
+          <div className="flex items-center justify-center gap-2 border-t border-gray-100 pt-8">
             <button
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="p-2 border border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed hover:border-black transition-all"
+              className="p-3 border border-gray-200 rounded-none disabled:opacity-30 disabled:cursor-not-allowed hover:border-black transition-colors bg-white"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
 
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-              // Show first page, last page, current page, and pages around current
               const showPage =
                 page === 1 ||
                 page === totalPages ||
                 (page >= currentPage - 1 && page <= currentPage + 1);
 
-              const showEllipsis =
-                (page === currentPage - 2 && currentPage > 3) ||
-                (page === currentPage + 2 && currentPage < totalPages - 2);
-
-              if (showEllipsis) {
-                return <span key={page} className="px-2 text-gray-400">...</span>;
-              }
-
-              if (!showPage) {
-                return null;
-              }
+              if (!showPage) return null;
 
               return (
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1.5 text-sm font-medium border transition-all ${
+                  className={`w-11 h-11 text-sm font-bold border transition-all ${
                     currentPage === page
                       ? "bg-black text-white border-black"
-                      : "bg-white text-black border-gray-300 hover:border-black"
+                      : "bg-white text-gray-600 border-gray-200 hover:border-black hover:text-black"
                   }`}
                 >
                   {page}
@@ -287,9 +519,9 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
             <button
               onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 border border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed hover:border-black transition-all"
+              className="p-3 border border-gray-200 rounded-none disabled:opacity-30 disabled:cursor-not-allowed hover:border-black transition-colors bg-white"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         )}
@@ -297,3 +529,4 @@ export default function DomainsPage({ searchParams }: DomainsPageProps) {
     </div>
   );
 }
+

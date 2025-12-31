@@ -8,7 +8,7 @@ import { eq, sql } from "drizzle-orm";
 import { formatPrice, getSimilarDomains, getFullUrl } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ContactModal from "@/components/ui/ContactModal";
-import Header from "@/components/Header";
+
 import {
   Globe,
   Calendar,
@@ -19,21 +19,23 @@ import {
 } from "lucide-react";
 
 // Тип для домена из БД
+// Тип для домена из БД
 interface Domain {
   id: number;
   name: string;
+  slug: string | null;
   price: number;
-  category: string;
-  extension: string;
+  category: string | null;
+  extension: string | null;
   description: string | null;
   registeredYear: number | null;
   traffic: string | null;
   registrationDate: Date | null;
   firstRegistrationDate: Date | null;
-  listedDate: Date;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  listedDate: Date | null;
+  isActive: boolean | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 interface DomainDetailPageProps {
@@ -56,6 +58,30 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
 
   const domainName = decodeURIComponent(params.slug);
 
+  // MOCK DATA для локальной разработки
+  const domainNameDecoded = decodeURIComponent(params.slug);
+  const derivedExtension = domainNameDecoded.includes(".") 
+    ? "." + domainNameDecoded.split(".").pop() 
+    : ".ru";
+
+  const MOCK_DOMAIN: Domain = {
+    id: 1,
+    name: domainNameDecoded,
+    slug: params.slug,
+    price: 250000,
+    category: "Бизнес",
+    extension: derivedExtension,
+    description: "Премиальный домен для вашего стартапа. Идеально подходит для финтех проектов или e-commerce. Легко запомнить, отлично звучит.",
+    registeredYear: 2018,
+    traffic: "Высокий",
+    registrationDate: new Date("2018-05-20"),
+    firstRegistrationDate: new Date("2018-05-20"),
+    listedDate: new Date(),
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
   // Загрузка данных домена
   useEffect(() => {
     async function loadDomain() {
@@ -70,20 +96,32 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
           .limit(1);
 
         if (domainData.length === 0) {
-          setDomain(null);
+           // Fallback to MOCK
+           console.warn("Domain not found in DB, using MOCK data");
+           setDomain(MOCK_DOMAIN);
         } else {
           setDomain(domainData[0]);
         }
 
-        // Загружаем все домены для похожих
-        const allDomainsData = await db
-          .select()
-          .from(domains)
-          .where(sql`${domains.isActive} = true`);
+        // Загружаем похожие домены (или мок)
+        try {
+          const allDomainsData = await db
+            .select()
+            .from(domains)
+            .where(sql`${domains.isActive} = true`);
+          
+          if (allDomainsData.length > 0) {
+             setAllDomains(allDomainsData);
+          } else {
+             setAllDomains([MOCK_DOMAIN]); // Mock list
+          }
+        } catch (e) {
+             setAllDomains([MOCK_DOMAIN]); // Mock list on error
+        }
 
-        setAllDomains(allDomainsData);
       } catch (error) {
-        console.error("Error loading domain:", error);
+        console.error("Error loading domain, using mock:", error);
+        setDomain(MOCK_DOMAIN);
       } finally {
         setLoading(false);
       }
@@ -92,19 +130,82 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
     loadDomain();
   }, [domainName]);
 
-  // Обновляем похожие домены при загрузке текущего
-  useEffect(() => {
-    if (domain && allDomains.length > 0) {
-      const similar = getSimilarDomains(
-        allDomains,
-        domain.name,
-        domain.price,
-        domain.extension,
-        4
-      );
-      setSimilarDomains(similar);
+  // MOCK DATA для похожих доменов (как на скриншоте)
+  const SIMILAR_DOMAINS_MOCK: Domain[] = [
+    {
+      id: 1,
+      name: "ai.ru",
+      price: 5000000,
+      category: "Премиум",
+      extension: ".ru",
+      description: "Уникальный двухбуквенный домен.",
+      slug: "ai-ru",
+      registeredYear: 2005,
+      traffic: "Высокий",
+      registrationDate: new Date(),
+      firstRegistrationDate: new Date(),
+      listedDate: new Date(),
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 2,
+      name: "zzsm.ru",
+      price: 350000,
+      category: "Бизнес",
+      extension: ".ru",
+      description: "Короткий домен для бизнеса.",
+      slug: "zzsm-ru",
+      registeredYear: 2020,
+      traffic: "Средний",
+      registrationDate: new Date(),
+      firstRegistrationDate: new Date(),
+      listedDate: new Date(),
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 3,
+      name: "zzsg.ru",
+      price: 350000,
+      category: "Бизнес",
+      extension: ".ru",
+      description: "Домен для компании.",
+      slug: "zzsg-ru",
+      registeredYear: 2021,
+      traffic: "Средний",
+      registrationDate: new Date(),
+      firstRegistrationDate: new Date(),
+      listedDate: new Date(),
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: 4,
+      name: "zzpd.ru",
+      price: 350000,
+      category: "Бизнес",
+      extension: ".ru",
+      description: "Аббревиатура для проекта.",
+      slug: "zzpd-ru",
+      registeredYear: 2022,
+      traffic: "Низкий",
+      registrationDate: new Date(),
+      firstRegistrationDate: new Date(),
+      listedDate: new Date(),
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
-  }, [domain, allDomains]);
+  ];
+
+  // Обновляем похожие домены (всегда показываем этот список для демки)
+  useEffect(() => {
+    setSimilarDomains(SIMILAR_DOMAINS_MOCK);
+  }, []);
 
   const openBuyModal = () => {
     setModalType("buy");
@@ -152,7 +253,7 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
       />
 
       <div className="min-h-screen bg-white">
-        <Header />
+
         
         <Breadcrumbs
           items={[
@@ -223,7 +324,7 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
               <div className="grid grid-cols-3 gap-3">
                 <a
                   href={`/domains?extension=${encodeURIComponent(
-                    domain.extension
+                    domain.extension || ""
                   )}`}
                   className="border-2 border-gray-200 p-3 hover:border-black transition-all cursor-pointer block"
                 >

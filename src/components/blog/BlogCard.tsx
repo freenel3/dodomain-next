@@ -6,10 +6,10 @@ interface BlogCardProps {
   post: {
     slug: string;
     title: string;
-    excerpt: string;
-    category: string;
-    readTime: string;
-    publishedDate: Date;
+    excerpt: string | null;
+    category: string | null;
+    readTime: string | null;
+    publishedDate: Date | null;
   };
   isFeatured?: boolean;
 }
@@ -31,16 +31,16 @@ export default function BlogCard({ post, isFeatured = false }: BlogCardProps) {
         <div className={`px-2 py-0.5 text-xs font-medium ${
           isFeatured ? 'bg-black text-white' : 'bg-gray-100 text-gray-900'
         }`}>
-          {post.category}
+          {post.category || 'Без категории'}
         </div>
         <div className="flex items-center gap-3 text-xs text-gray-600">
           <div className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />
-            <span>{formatDateShort(post.publishedDate)}</span>
+            <span>{formatDateShort(post.publishedDate || new Date())}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            <span>{post.readTime}</span>
+            <span>{post.readTime || '5 мин'}</span>
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function BlogCard({ post, isFeatured = false }: BlogCardProps) {
 
       {/* Описание */}
       <p className="text-sm text-gray-600 leading-relaxed mb-3 line-clamp-2">
-        {post.excerpt}
+        {post.excerpt || ''}
       </p>
 
       {/* Стрелка */}

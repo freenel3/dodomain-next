@@ -17,6 +17,7 @@ async function seed() {
     // Брендовые домены
     {
       name: "dodomain.ru",
+      slug: "dodomain-ru",
       price: 500000,
       category: "Брендовые",
       extension: ".ru",
@@ -31,6 +32,7 @@ async function seed() {
     },
     {
       name: "dodomain.com",
+      slug: "dodomain-com",
       price: 1000000,
       category: "Брендовые",
       extension: ".com",
@@ -45,6 +47,7 @@ async function seed() {
     },
     {
       name: "dodomain.рф",
+      slug: "dodomain-rf",
       price: 350000,
       category: "Брендовые",
       extension: ".рф",
@@ -59,6 +62,7 @@ async function seed() {
     },
     {
       name: "dodomain.рус",
+      slug: "dodomain-rus",
       price: 300000,
       category: "Брендовые",
       extension: ".рус",
@@ -75,6 +79,7 @@ async function seed() {
     // Короткие домены
     {
       name: "dod.ru",
+      slug: "dod-ru",
       price: 2500000,
       category: "Короткие",
       extension: ".ru",
@@ -89,6 +94,7 @@ async function seed() {
     },
     {
       name: "dod.com",
+      slug: "dod-com",
       price: 5000000,
       category: "Короткие",
       extension: ".com",
@@ -103,6 +109,7 @@ async function seed() {
     },
     {
       name: "dod.рф",
+      slug: "dod-rf",
       price: 1500000,
       category: "Короткие",
       extension: ".рф",
@@ -119,6 +126,7 @@ async function seed() {
     // Ключевые слова
     {
       name: "купитьдомен.ru",
+      slug: "kupit-domen-ru",
       price: 400000,
       category: "Ключевые слова",
       extension: ".ru",
@@ -133,6 +141,7 @@ async function seed() {
     },
     {
       name: "продатьдомен.ru",
+      slug: "prodat-domen-ru",
       price: 350000,
       category: "Ключевые слова",
       extension: ".ru",
@@ -147,6 +156,7 @@ async function seed() {
     },
     {
       name: "премиумдомен.ru",
+      slug: "premium-domen-ru",
       price: 450000,
       category: "Ключевые слова",
       extension: ".ru",
@@ -163,6 +173,7 @@ async function seed() {
     // Географические
     {
       name: "москва.рф",
+      slug: "moskva-rf",
       price: 10000000,
       category: "Географические",
       extension: ".рф",
@@ -177,6 +188,7 @@ async function seed() {
     },
     {
       name: "москва.москва",
+      slug: "moskva-moskva",
       price: 8000000,
       category: "Географические",
       extension: ".москва",
@@ -190,6 +202,7 @@ async function seed() {
     },
     {
       name: "спб.рф",
+      slug: "spb-rf",
       price: 5000000,
       category: "Географические",
       extension: ".рф",
@@ -205,6 +218,7 @@ async function seed() {
     // Технологии
     {
       name: "ai-домен.ru",
+      slug: "ai-domen-ru",
       price: 300000,
       category: "Технологии",
       extension: ".ru",
@@ -219,6 +233,7 @@ async function seed() {
     },
     {
       name: "tech-домен.ru",
+      slug: "tech-domen-ru",
       price: 250000,
       category: "Технологии",
       extension: ".ru",
@@ -234,6 +249,7 @@ async function seed() {
     // Финансы
     {
       name: "финансы.рф",
+      slug: "finansy-rf",
       price: 7000000,
       category: "Финансы",
       extension: ".рф",
@@ -247,6 +263,7 @@ async function seed() {
     },
     {
       name: "инвестиции.рф",
+      slug: "investicii-rf",
       price: 6000000,
       category: "Финансы",
       extension: ".рф",

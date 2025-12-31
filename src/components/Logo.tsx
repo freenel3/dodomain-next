@@ -1,27 +1,18 @@
 import Link from "next/link";
 
 /**
- * Логотип dodomain
- * Server Component - не требует интерактивности
+ * Логотип приложения (Server Component)
  */
 export default function Logo() {
   return (
-    <Link href="/" className="relative group inline-block">
-      <div className="relative flex items-start">
-        <span className="text-2xl font-display font-bold tracking-tighter text-black lowercase">
-          dodom
-        </span>
-        <div className="relative inline-flex flex-col items-center">
-          <span className="text-2xl font-display font-bold tracking-tighter text-black lowercase">
-            a
-          </span>
-          <div className="relative inline-flex flex-col items-center">
-            <div className="w-1.5 h-1.5 bg-red-500 rounded-full mb-0.5 group-hover:scale-125 transition-transform"></div>
-            <span className="text-2xl font-display font-bold tracking-tighter text-black lowercase">
-              in
-            </span>
-          </div>
+    <Link href="/" className="inline-block group">
+      <div className="flex items-baseline font-bold tracking-tighter text-black lowercase text-2xl font-display">
+        <span>dodoma</span>
+        <div className="relative flex flex-col items-center mx-[1px]">
+          <div className="w-1.5 h-1.5 bg-red-500 rounded-full absolute -top-0.5 left-1/2 -translate-x-1/2 opacity-100"></div>
+          <span>i</span>
         </div>
+        <span>n</span>
       </div>
     </Link>
   );
