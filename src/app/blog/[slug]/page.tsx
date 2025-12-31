@@ -220,9 +220,9 @@ export default function BlogPostPage() {
         return (
           <div key={index}>
             {shouldShowBanner && (
-              <div className="my-10 -mx-6 bg-[#F8F9FA] p-8">
+              <div className="my-6 -mx-4 md:-mx-12 md:my-10 bg-[#F8F9FA] p-6 md:p-8">
                 <div className="max-w-xl mx-auto text-center">
-                  <h3 className="text-xl font-display font-bold text-black mb-3 tracking-tight">
+                  <h3 className="text-lg md:text-xl font-display font-bold text-black mb-3 tracking-tight">
                     Подбор и покупка доменов
                   </h3>
                   <p className="text-sm text-gray-600 mb-6 max-w-lg mx-auto leading-relaxed">
@@ -245,16 +245,16 @@ export default function BlogPostPage() {
                       <span>Помощь эксперта</span>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                     <a
                       href="/domains"
-                      className="px-5 py-2.5 bg-black text-white text-xs font-bold uppercase tracking-wider hover:bg-gray-800 transition-all"
+                      className="w-full sm:w-auto px-5 py-2.5 bg-black text-white text-xs font-bold uppercase tracking-wider hover:bg-gray-800 transition-all text-center"
                     >
                       Каталог доменов
                     </a>
                     <a
                       href="/contact"
-                      className="px-5 py-2.5 bg-white border border-gray-300 text-black text-xs font-bold uppercase tracking-wider hover:border-black transition-all"
+                      className="w-full sm:w-auto px-5 py-2.5 bg-white border border-gray-300 text-black text-xs font-bold uppercase tracking-wider hover:border-black transition-all text-center"
                     >
                       Связаться с нами
                     </a>
@@ -311,7 +311,7 @@ export default function BlogPostPage() {
         </div>
 
         {/* Article Card */}
-        <article className="bg-white border border-gray-100 shadow-sm p-8 md:p-12 rounded-sm">
+        <article className="bg-white border border-gray-100 shadow-sm p-5 md:p-12 rounded-sm">
           
           {/* Header Section */}
           <div className="mb-8">
@@ -333,7 +333,7 @@ export default function BlogPostPage() {
             </div>
 
             {/* H1 Title */}
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-black leading-tight mb-6 tracking-tight">
+            <h1 className="text-2xl md:text-4xl font-display font-bold text-black leading-tight mb-6 tracking-tight">
               {post.title}
             </h1>
 
