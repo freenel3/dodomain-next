@@ -40,17 +40,16 @@ export default async function Home() {
     }
   } catch (e) {
       // Mock fallback
-      featuredDomains = Array.from({ length: 8 }).map((_, i) => ({
-        id: i + 1,
-        slug: `domain-${i + 1}`,
-        name: `domain${i + 1}.com`,
-        price: (i + 1) * 20000,
-        category: "Бизнес",
-        extension: ".com",
-        isActive: true,
-        traffic: "Средний",
-        registeredYear: 2020,
-      }));
+      featuredDomains = [
+        { id: 1, slug: 'start-ru', name: 'start.ru', price: 250000, category: 'Бизнес', extension: '.ru', isActive: true, traffic: 'Высокий', registeredYear: 2020 },
+        { id: 2, slug: 'shop-com', name: 'shop.com', price: 1500000, category: 'Премиум', extension: '.com', isActive: true, traffic: 'Очень высокий', registeredYear: 2010 },
+        { id: 3, slug: 'bank-net', name: 'bank.net', price: 800000, category: 'Финансы', extension: '.net', isActive: true, traffic: 'Высокий', registeredYear: 2015 },
+        { id: 4, slug: 'play-io', name: 'play.io', price: 450000, category: 'Гейминг', extension: '.io', isActive: true, traffic: 'Средний', registeredYear: 2021 },
+        { id: 5, slug: 'code-dev', name: 'code.dev', price: 120000, category: 'IT', extension: '.dev', isActive: true, traffic: 'Средний', registeredYear: 2022 },
+        { id: 6, slug: 'art-gallery', name: 'art.gallery', price: 95000, category: 'Искусство', extension: '.gallery', isActive: true, traffic: 'Низкий', registeredYear: 2023 },
+        { id: 7, slug: 'tech-ai', name: 'tech.ai', price: 550000, category: 'AI', extension: '.ai', isActive: true, traffic: 'Высокий', registeredYear: 2024 },
+        { id: 8, slug: 'moscow-city', name: 'moscow.city', price: 300000, category: 'Гео', extension: '.city', isActive: true, traffic: 'Средний', registeredYear: 2019 },
+      ];
   }
 
   // Загружаем последние 3 статьи блога

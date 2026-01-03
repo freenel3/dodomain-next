@@ -143,6 +143,25 @@ export default async function BlogPostPage({ params }: PageProps) {
     } catch (error) {
       console.error("Error fetching post from DB:", error);
     }
+
+    if (!post && (slug === 'how-to-choose-domain-2025' || slug === 'why-com-domains-expensive')) {
+        post = {
+            id: 999,
+            slug: slug,
+            title: slug === 'how-to-choose-domain-2025' ? 'SEO и домены: что важно знать' : 'Безопасность сделок с доменами',
+            excerpt: "Это демонстрационная статья, отображаемая так как база данных недоступна локально.",
+            content: "База данных PostgreSQL недоступна, поэтому вы видите этот контент-заглушку. \n\n## Пример заголовка статьи\n\nТекст статьи будет загружен из базы данных на реальном сервере. Дизайн и верстка страницы полностью соответствуют макетам.",
+            category: "Инвестиции",
+            readTime: "5 мин",
+            featuredImage: null,
+            publishedDate: new Date(),
+            isPublished: true,
+            metaTitle: "Тестовая статья",
+            metaDescription: "Тестовое описание",
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+    }
   }
 
   // Если пост не найден
