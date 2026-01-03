@@ -15,7 +15,8 @@ export function cn(...inputs: ClassValue[]) {
  * @param price - Цена в рублях
  * @returns Отформатированная строка цены
  */
-export function formatPrice(price: number): string {
+export function formatPrice(price: number | null | undefined): string {
+  if (price === undefined || price === null) return "— ₽";
   return `${price.toLocaleString("ru-RU")} ₽`;
 }
 

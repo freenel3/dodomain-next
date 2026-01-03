@@ -1,7 +1,4 @@
-"use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Search, Globe, TrendingUp, Shield, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { db } from "@/db";
@@ -10,133 +7,95 @@ import { desc, sql, eq } from "drizzle-orm";
 import { PAGINATION } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
 import DomainCard from "@/components/domains/DomainCard";
+import HomeSearch from "@/components/home/HomeSearch";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Купить домен - площадка премиум имен dodomain",
+  description: "Огромный выбор красивых доменов для бизнеса. Покупка, продажа, гарант сделок. Найдите имя для своего проекта сегодня.",
+};
+
 
 /**
  * Главная страница
- * Client Component - требует useState для поиска и useRouter для навигации
+ * Server Component
  */
-export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [featuredDomains, setFeaturedDomains] = useState<any[]>([]);
-  const [recentPosts, setRecentPosts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+export default async function Home() {
+  let featuredDomains: any[] = [];
+  let recentPosts: any[] = [];
 
-  // Загрузка топ-доменов и последних статей при монтировании
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
+  // Загружаем топ-8 доменов (по цене)
+  try {
+    const topDomains = await db
+        .select()
+        .from(domains)
+        .where(sql`${domains.isActive} = true`)
+        .orderBy(desc(domains.listedDate))
+        .limit(8);
 
-        // Загружаем топ-8 доменов (по цене)
-        const topDomains = await db
-          .select()
-          .from(domains)
-          .where(sql`${domains.isActive} = true`)
-          .orderBy(desc(domains.listedDate))
-          .limit(8);
-
-        if (topDomains.length > 0) {
-          setFeaturedDomains(topDomains);
-        } else {
-           // MOCK fallback for domains
-           setFeaturedDomains(Array.from({ length: 8 }).map((_, i) => ({
-             id: i + 1,
-             slug: `domain-${i + 1}`,
-             name: `domain${i + 1}.com`,
-             price: (i + 1) * 20000,
-             category: "Бизнес",
-             extension: "com",
-             isActive: true,
-           })));
-        }
-
-        // Загружаем последние 3 статьи блога
-        const latestPosts = await db
-          .select()
-          .from(blogPosts)
-          .where(sql`${blogPosts.isPublished} = true`)
-          .orderBy(desc(blogPosts.publishedDate))
-          .limit(3);
-
-        if (latestPosts.length > 0) {
-          setRecentPosts(latestPosts);
-        } else {
-           // MOCK fallback for posts
-           setRecentPosts([
-             {
-               slug: "guide-to-investing",
-               title: "Руководство по инвестициям в домены",
-               excerpt: "Как начать зарабатывать на перепродаже доменных имен.",
-               category: "Инвестиции",
-             },
-             {
-                slug: "seo-domains",
-                title: "SEO и домены: что важно знать",
-                excerpt: "Влияние доменного имени на ранжирование в поисковых системах.",
-                category: "SEO",
-             },
-             {
-               slug: "domain-safety",
-               title: "Безопасность сделок с доменами",
-               excerpt: "Как не стать жертвой мошенников при покупке домена.",
-               category: "Безопасность",
-             }
-           ]);
-        }
-      } catch (error) {
-        console.error("Error loading data, using mocks:", error);
-         // MOCK fallback on error
-         setFeaturedDomains(Array.from({ length: 8 }).map((_, i) => ({
-             id: i + 1,
-             slug: `domain-${i + 1}`,
-             name: `domain${i + 1}.com`,
-             price: (i + 1) * 20000,
-             category: "Бизнес",
-             extension: "com",
-             isActive: true,
-           })));
-          
-          setRecentPosts([
-             {
-               slug: "guide-to-investing",
-               title: "Руководство по инвестициям в домены",
-               excerpt: "Как начать зарабатывать на перепродаже доменных имен.",
-               category: "Инвестиции",
-             },
-             {
-                slug: "seo-domains",
-                title: "SEO и домены: что важно знать",
-                excerpt: "Влияние доменного имени на ранжирование в поисковых системах.",
-                category: "SEO",
-             },
-             {
-               slug: "domain-safety",
-               title: "Безопасность сделок с доменами",
-               excerpt: "Как не стать жертвой мошенников при покупке домена.",
-               category: "Безопасность",
-             }
-           ]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-  }, []);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/domains?search=${encodeURIComponent(searchQuery.trim())}`);
+    if (topDomains.length > 0) {
+        featuredDomains = topDomains;
     } else {
-      router.push("/domains");
+        throw new Error("No domains found");
     }
-  };
+  } catch (e) {
+      // Mock fallback
+      featuredDomains = Array.from({ length: 8 }).map((_, i) => ({
+        id: i + 1,
+        slug: `domain-${i + 1}`,
+        name: `domain${i + 1}.com`,
+        price: (i + 1) * 20000,
+        category: "Бизнес",
+        extension: ".com",
+        isActive: true,
+        traffic: "Средний",
+        registeredYear: 2020,
+      }));
+  }
 
-  const handleExtensionClick = (extension: string) => {
-    router.push(`/domains?extension=${encodeURIComponent(extension)}`);
-  };
+  // Загружаем последние 3 статьи блога
+  try {
+     const latestPosts = await db
+        .select()
+        .from(blogPosts)
+        .where(sql`${blogPosts.isPublished} = true`)
+        .orderBy(desc(blogPosts.publishedDate))
+        .limit(3);
+    
+     if (latestPosts.length > 0) {
+         recentPosts = latestPosts.map(p => ({
+             ...p,
+             slug: p.slug,
+             title: p.title,
+             excerpt: p.excerpt || "",
+             category: p.category || "General"
+         }));
+     } else {
+         throw new Error("No posts found");
+     }
+  } catch (e) {
+      // Mock fallback
+      recentPosts = [
+        {
+          slug: "domain-zone-2000-hu-guide",
+          title: "Руководство по инвестициям в домены",
+          excerpt: "Как начать зарабатывать на перепродаже доменных имен.",
+          category: "Инвестиции",
+        },
+        {
+           slug: "how-to-choose-domain-2025",
+           title: "SEO и домены: что важно знать",
+           excerpt: "Влияние доменного имени на ранжирование в поисковых системах.",
+           category: "SEO",
+        },
+        {
+          slug: "why-com-domains-expensive",
+          title: "Безопасность сделок с доменами",
+          excerpt: "Как не стать жертвой мошенников при покупке домена.",
+          category: "Безопасность",
+        }
+      ];
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -149,31 +108,9 @@ export default function Home() {
           <p className="text-lg text-gray-600 mb-8 font-light">
             Покупайте и продавайте премиум-домены на крупнейшей площадке
           </p>
-          <form onSubmit={handleSearch} className="mb-3">
-            <div className="relative max-w-md mx-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Поиск домена..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 text-black text-sm placeholder-gray-500 focus:outline-none focus:border-black transition-all"
-              />
-            </div>
-          </form>
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            <span className="text-xs text-gray-600 mr-2">Популярные зоны:</span>
-            {[".ru", ".рф", ".com", ".онлайн", ".москва", ".net"].map((ext) => (
-              <button
-                key={ext}
-                type="button"
-                onClick={() => handleExtensionClick(ext)}
-                className="px-3 py-1 bg-gray-100 text-black text-xs font-medium hover:bg-black hover:text-white transition-all"
-              >
-                {ext}
-              </button>
-            ))}
-          </div>
+          
+          <HomeSearch />
+
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/domains"
@@ -220,39 +157,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Domains Section */}
-      <section className="bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-display font-bold text-black mb-3 tracking-tight">
-              Популярные домены
-            </h2>
-            <p className="text-base text-gray-600 font-light">
-              Самые востребованные доменные имена
-            </p>
+      {/* Featured Domains */}
+      <section className="py-12 bg-gray-50">
+          <div className="max-w-5xl mx-auto px-4">
+              <div className="text-center mb-10">
+                  <h2 className="text-3xl font-display font-bold text-black mb-2">Новые поступления</h2>
+                  <p className="text-gray-500">Только что добавленные домены</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 {featuredDomains.map(domain => (
+                     <DomainCard key={domain.id} domain={domain} />
+                 ))}
+              </div>
+              
+              <div className="text-center mt-10">
+                  <Link href="/domains" className="text-black font-medium hover:underline text-sm">
+                      Посмотреть все домены &rarr;
+                  </Link>
+              </div>
           </div>
-
-          {loading ? (
-            <div className="text-center py-8">
-              <div className="text-gray-600">Загрузка...</div>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {featuredDomains.map((domain) => (
-                <DomainCard key={domain.slug} domain={domain} />
-              ))}
-            </div>
-          )}
-
-          <div className="text-center mt-8">
-            <Link
-              href="/domains"
-              className="inline-block px-6 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all"
-            >
-              Смотреть все домены
-            </Link>
-          </div>
-        </div>
       </section>
 
       {/* Features Section */}
@@ -306,51 +230,36 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Latest Blog Posts */}
-      {recentPosts.length > 0 && (
-        <section className="bg-gray-50 py-12">
-          <div className="max-w-3xl mx-auto px-4">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-display font-bold text-black mb-3 tracking-tight">
-                Последние статьи
-              </h2>
-              <p className="text-base text-gray-600 font-light">
-                Экспертные советы и рыночные тренды
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              {recentPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group bg-white border border-gray-200 p-5 hover:border-black transition-all"
-                >
-                  <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium mb-3 inline-block">
-                    {post.category}
-                  </div>
-                  <h3 className="text-lg font-display font-bold text-black mb-2 group-hover:underline tracking-tight">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-                    {post.excerpt}
-                  </p>
-                </Link>
-              ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <Link
-                href="/blog"
-                className="inline-block px-6 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all"
-              >
-                Все статьи
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      
+      {/* Blog Section */}
+      <section className="py-12 bg-gray-50 border-t border-gray-200">
+           <div className="max-w-4xl mx-auto px-4">
+               <div className="flex justify-between items-end mb-8">
+                   <div>
+                       <h2 className="text-2xl font-bold font-display text-black">Журнал</h2>
+                       <p className="text-sm text-gray-500 mt-1">Инсайты рынка доменов</p>
+                   </div>
+                   <Link href="/blog" className="text-sm font-medium hover:underline text-black">
+                       Все статьи
+                   </Link>
+               </div>
+               
+               <div className="grid md:grid-cols-3 gap-6">
+                   {recentPosts.map(post => (
+                       <Link key={post.slug} href={`/blog/${post.slug}`} className="group block h-full">
+                           <div className="bg-white border border-gray-200 h-full p-5 hover:border-black transition-colors flex flex-col">
+                               <div className="text-xs text-gray-500 mb-2 uppercase tracking-wide font-medium">{post.category}</div>
+                               <h3 className="text-lg font-bold text-black mb-2 group-hover:underline leading-snug">{post.title}</h3>
+                               <p className="text-sm text-gray-600 line-clamp-3 mb-4 flex-grow">{post.excerpt}</p>
+                               <div className="text-xs font-medium text-black mt-auto flex items-center gap-1">
+                                   Читать далее <ArrowRight className="w-3 h-3" />
+                               </div>
+                           </div>
+                       </Link>
+                   ))}
+               </div>
+           </div>
+      </section>
 
       {/* CTA Section */}
       <section className="max-w-3xl mx-auto px-4 py-12">

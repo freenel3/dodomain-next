@@ -1,15 +1,14 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useParams, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { blogPosts, domains } from "@/db";
-import { eq, sql, desc } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { formatDate, getSimilarDomains } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { Calendar, Clock, Share2, Globe, ArrowRight } from "lucide-react";
+import { Calendar, Clock, Globe } from "lucide-react";
+import ShareButton from "@/components/blog/ShareButton";
+import { Metadata } from "next";
 
-// Тип для статьи из БД
+// Тип для статьи
 interface BlogPost {
   id: number;
   slug: string;
@@ -27,38 +26,44 @@ interface BlogPost {
   updatedAt: Date;
 }
 
-/**
- * Детальная страница статьи блога
- * Client Component - требует useState для модального окна
- */
-export default function BlogPostPage() {
-  const params = useParams(); // useParams returns params object, slug can be string or string[]
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [allDomains, setAllDomains] = useState<any[]>([]);
-  const [similarDomains, setSimilarDomains] = useState<any[]>([]);
+// В Next.js 15 params это Promise
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-  // Safely extract slug parameter
-  const rawSlug = params?.slug;
-  const slug = decodeURIComponent(
-    Array.isArray(rawSlug) ? rawSlug[0] : (rawSlug || "")
-  );
+// Генерация метаданных
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  
+  // Quick fix for hardcoded post metadata
+  if (slug === "domain-zone-2000-hu-guide") {
+    return {
+      title: "Доменная зона .2000.hu — полное руководство",
+      description: "Полный обзор уникальной венгерской доменной зоны .2000.hu.",
+    };
+  }
 
-  // Загрузка данных
-  useEffect(() => {
-    async function loadData() {
-      if (!slug) return;
-      
-      setLoading(true);
+  // TODO: Fetch from DB for dynamic metadata
+  return {
+    title: `Статья ${slug}`,
+  };
+}
 
-      // HARDCODED MOCK for the specific article requested by UI review
-      if (slug === "domain-zone-2000-hu-guide") {
-         const MOCK_POST: BlogPost = {
-          id: 1,
-          slug: "domain-zone-2000-hu-guide",
-          title: "Доменная зона .2000.hu — полное руководство",
-          excerpt: "Полный обзор уникальной венгерской доменной зоны .2000.hu. Узнайте особенности регистрации, преимущества для локального бизнеса и SEO-потенциал.",
-          content: `Расширение домена .2000.hu — это домен второго уровня с кодом страны (ccSLD) для Венгрии, названный в честь города Тёкёль, который имеет почтовый индекс 2000. Это особенно актуально для частных лиц, предприятий и организаций, которые работают или имеют тесную связь с этим регионом.
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params;
+  
+  let post: BlogPost | null = null;
+  let allDomains: any[] = [];
+  let similarDomains: any[] = [];
+
+  // 1. HARDCODED MOCK
+  if (slug === "domain-zone-2000-hu-guide") {
+    post = {
+      id: 1,
+      slug: "domain-zone-2000-hu-guide",
+      title: "Доменная зона .2000.hu — полное руководство",
+      excerpt: "Полный обзор уникальной венгерской доменной зоны .2000.hu. Узнайте особенности регистрации, преимущества для локального бизнеса и SEO-потенциал.",
+      content: `Расширение домена .2000.hu — это домен второго уровня с кодом страны (ccSLD) для Венгрии, названный в честь города Тёкёль, который имеет почтовый индекс 2000. Это особенно актуально для частных лиц, предприятий и организаций, которые работают или имеют тесную связь с этим регионом.
 
 ## Что такое доменная зона .2000.hu — краткий обзор
 
@@ -102,111 +107,72 @@ export default function BlogPostPage() {
 ### Кто может зарегистрировать домен .2000.hu и условия регистрации
 
 Чтобы купить доменное имя .2000.hu, покупатель должен быть гражданином или резидентом Венгрии, поскольку такие доменные имена в основном предназначены для таких физических или юридических лиц. Организации или предприятия, занимающиеся деятельностью, связанной с регионом, также могут иметь возможность купить такой домен. Окончательные полномочия по одобрению таких покупок возлагаются на регистратора домена и соответствующие венгерские власти.`,
-          category: "Доменные зоны",
-          readTime: "8 мин",
-          featuredImage: null,
-          publishedDate: new Date("2024-12-20"),
-          isPublished: true,
-          metaTitle: "Доменная зона .2000.hu",
-          metaDescription: null,
-          createdAt: new Date(),
-          updatedAt: new Date()
-         };
-         setPost(MOCK_POST);
-         setLoading(false);
-         return; // Skip DB fetch
+      category: "Доменные зоны",
+      readTime: "8 мин",
+      featuredImage: null,
+      publishedDate: new Date("2024-12-20"),
+      isPublished: true,
+      metaTitle: "Доменная зона .2000.hu",
+      metaDescription: null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+  } 
+  // 2. DB Fetch
+  else {
+    try {
+      const postData = await db
+        .select()
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+
+      if (postData.length > 0) {
+        const rawPost = postData[0];
+        post = {
+          ...rawPost,
+          isPublished: rawPost.isPublished ?? false,
+          excerpt: rawPost.excerpt || "",
+          category: rawPost.category || "Uncategorized",
+          readTime: rawPost.readTime || "",
+          publishedDate: rawPost.publishedDate,
+          createdAt: rawPost.createdAt || new Date(),
+          updatedAt: rawPost.updatedAt || new Date(),
+        };
       }
-
-      try {
-        // Загружаем статью по slug из БД (как фоллбек для других статей)
-        const postData = await db
-          .select()
-          .from(blogPosts)
-          .where(eq(blogPosts.slug, slug))
-          .limit(1);
-
-        if (postData.length === 0) {
-          // Fallback mocks for other known slugs if DB is empty
-          if (slug === "how-to-choose-domain-2025") {
-             // ... можно добавить и другие, но пока хватит главного
-             setPost(null); 
-          } else {
-             setPost(null);
-          }
-        } else {
-          // Map DB to UI type safely
-          const rawPost = postData[0];
-          const typedPost: BlogPost = {
-            ...rawPost,
-            isPublished: rawPost.isPublished ?? false,
-            excerpt: rawPost.excerpt || "",
-            category: rawPost.category || "Uncategorized",
-            readTime: rawPost.readTime || "",
-            publishedDate: rawPost.publishedDate,
-            createdAt: rawPost.createdAt || new Date(),
-            updatedAt: rawPost.updatedAt || new Date(),
-          };
-          setPost(typedPost);
-        }
-
-        // Загружаем все домены для похожих (по категории)
-        if (postData.length > 0 && postData[0].category) {
-          const domainsData = await db
-            .select()
-            .from(domains)
-            .where(sql`${domains.isActive} = true`)
-            .limit(20);
-
-          setAllDomains(domainsData);
-        }
-      } catch (error) {
-        console.error("Error loading blog post:", error);
-      } finally {
-        setLoading(false);
-      }
+    } catch (error) {
+      console.error("Error fetching post from DB:", error);
     }
+  }
 
-    loadData();
-  }, [slug]);
+  // Если пост не найден
+  if (!post) {
+    notFound();
+  }
 
-  // Обновляем похожие домены
-  useEffect(() => {
-    if (post && allDomains.length > 0) {
-      const similar = getSimilarDomains(
+  // 3. Fetch similar domains (only if we have a category)
+  if (post.category) {
+    try {
+      const domainsData = await db
+        .select()
+        .from(domains)
+        .where(sql`${domains.isActive} = true`)
+        .limit(20);
+      
+      allDomains = domainsData;
+      similarDomains = getSimilarDomains(
         allDomains,
         post.title || "",
         0,
         post.category || "",
         4
       );
-      setSimilarDomains(similar);
+    } catch (e) {
+      console.error("Error fetching domains:", e);
     }
-  }, [post, allDomains]);
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: post?.title || "",
-        url: window.location.href,
-      });
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-sm text-gray-600">Загрузка...</div>
-        </div>
-      </div>
-    );
   }
 
-  if (!post) {
-    notFound();
-  }
-
-  // Форматируем контент (Markdown-подобный)
+  // Helper for formatting content
   const formatContent = (content: string) => {
     return content.split("\n").map((line, index) => {
       // Подсчет заголовков для баннера
@@ -305,7 +271,7 @@ export default function BlogPostPage() {
             items={[
               { label: "Главная", path: "/" },
               { label: "Блог", path: "/blog" },
-              { label: post.title || "" },
+              { label: post.title },
             ]}
           />
         </div>
@@ -351,14 +317,7 @@ export default function BlogPostPage() {
                 </div>
               </div>
               
-              <button
-                type="button"
-                onClick={handleShare}
-                className="text-gray-400 hover:text-black transition-colors"
-                aria-label="Поделиться"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
+              <ShareButton title={post.title} />
             </div>
           </div>
 

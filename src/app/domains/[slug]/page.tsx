@@ -1,25 +1,14 @@
-"use client";
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { db } from "@/db";
 import { domains } from "@/db";
 import { eq, sql } from "drizzle-orm";
-import { formatPrice, getSimilarDomains, getFullUrl } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import ContactModal from "@/components/ui/ContactModal";
+import DomainInteractions from "@/components/domains/DomainInteractions";
+import Link from "next/link";
+import { Globe, Calendar, TrendingUp } from "lucide-react";
 
-import {
-  Globe,
-  Calendar,
-  TrendingUp,
-  Mail,
-  ArrowRight,
-  Check,
-} from "lucide-react";
-
-// Тип для домена из БД
-// Тип для домена из БД
+// Тип для домена (дублирование, лучше бы в types.ts, но оставим тут для скорости)
 interface Domain {
   id: number;
   name: string;
@@ -39,231 +28,145 @@ interface Domain {
 }
 
 interface DomainDetailPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+}
+
+export async function generateMetadata({ params }: DomainDetailPageProps) {
+    const { slug } = await params;
+    const domainName = decodeURIComponent(slug);
+    
+    return {
+        title: `Купить домен ${domainName} | dodomain`,
+        description: `Премиум домен ${domainName} доступен для покупки. Безопасная сделка, мгновенная передача.`,
+    };
 }
 
 /**
  * Детальная страница домена
- * Client Component - требует useState для модального окна
+ * Server Component
  */
-export default function DomainDetail({ params }: DomainDetailPageProps) {
-  const [domain, setDomain] = useState<Domain | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [allDomains, setAllDomains] = useState<Domain[]>([]);
-  const [similarDomains, setSimilarDomains] = useState<Domain[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"buy" | "offer">("buy");
+export default async function DomainDetail({ params }: DomainDetailPageProps) {
+  const { slug } = await params;
+  const domainName = decodeURIComponent(slug);
 
-  const domainName = decodeURIComponent(params.slug);
+  let domain: Domain | null = null;
+  let similarDomains: Domain[] = [];
 
-  // MOCK DATA для локальной разработки
-  const domainNameDecoded = decodeURIComponent(params.slug);
-  const derivedExtension = domainNameDecoded.includes(".") 
-    ? "." + domainNameDecoded.split(".").pop() 
-    : ".ru";
+  // 1. Загрузка данных домена
+  try {
+      const domainData = await db
+        .select()
+        .from(domains)
+        .where(eq(domains.name, domainName))
+        .limit(1);
 
-  const MOCK_DOMAIN: Domain = {
-    id: 1,
-    name: domainNameDecoded,
-    slug: params.slug,
-    price: 250000,
-    category: "Бизнес",
-    extension: derivedExtension,
-    description: "Премиальный домен для вашего стартапа. Идеально подходит для финтех проектов или e-commerce. Легко запомнить, отлично звучит.",
-    registeredYear: 2018,
-    traffic: "Высокий",
-    registrationDate: new Date("2018-05-20"),
-    firstRegistrationDate: new Date("2018-05-20"),
-    listedDate: new Date(),
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  // Загрузка данных домена
-  useEffect(() => {
-    async function loadDomain() {
-      try {
-        setLoading(true);
-
-        // Загружаем домен по имени
-        const domainData = await db
-          .select()
-          .from(domains)
-          .where(eq(domains.name, domainName))
-          .limit(1);
-
-        if (domainData.length === 0) {
-           // Fallback to MOCK
-           console.warn("Domain not found in DB, using MOCK data");
-           setDomain(MOCK_DOMAIN);
-        } else {
-          setDomain(domainData[0]);
-        }
-
-        // Загружаем похожие домены (или мок)
-        try {
-          const allDomainsData = await db
-            .select()
-            .from(domains)
-            .where(sql`${domains.isActive} = true`);
-          
-          if (allDomainsData.length > 0) {
-             setAllDomains(allDomainsData);
-          } else {
-             setAllDomains([MOCK_DOMAIN]); // Mock list
-          }
-        } catch (e) {
-             setAllDomains([MOCK_DOMAIN]); // Mock list on error
-        }
-
-      } catch (error) {
-        console.error("Error loading domain, using mock:", error);
-        setDomain(MOCK_DOMAIN);
-      } finally {
-        setLoading(false);
+      if (domainData.length > 0) {
+          domain = domainData[0];
       }
-    }
-
-    loadDomain();
-  }, [domainName]);
-
-  // MOCK DATA для похожих доменов (как на скриншоте)
-  const SIMILAR_DOMAINS_MOCK: Domain[] = [
-    {
-      id: 1,
-      name: "ai.ru",
-      price: 5000000,
-      category: "Премиум",
-      extension: ".ru",
-      description: "Уникальный двухбуквенный домен.",
-      slug: "ai-ru",
-      registeredYear: 2005,
-      traffic: "Высокий",
-      registrationDate: new Date(),
-      firstRegistrationDate: new Date(),
-      listedDate: new Date(),
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: 2,
-      name: "zzsm.ru",
-      price: 350000,
-      category: "Бизнес",
-      extension: ".ru",
-      description: "Короткий домен для бизнеса.",
-      slug: "zzsm-ru",
-      registeredYear: 2020,
-      traffic: "Средний",
-      registrationDate: new Date(),
-      firstRegistrationDate: new Date(),
-      listedDate: new Date(),
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: 3,
-      name: "zzsg.ru",
-      price: 350000,
-      category: "Бизнес",
-      extension: ".ru",
-      description: "Домен для компании.",
-      slug: "zzsg-ru",
-      registeredYear: 2021,
-      traffic: "Средний",
-      registrationDate: new Date(),
-      firstRegistrationDate: new Date(),
-      listedDate: new Date(),
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: 4,
-      name: "zzpd.ru",
-      price: 350000,
-      category: "Бизнес",
-      extension: ".ru",
-      description: "Аббревиатура для проекта.",
-      slug: "zzpd-ru",
-      registeredYear: 2022,
-      traffic: "Низкий",
-      registrationDate: new Date(),
-      firstRegistrationDate: new Date(),
-      listedDate: new Date(),
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }
-  ];
-
-  // Обновляем похожие домены (всегда показываем этот список для демки)
-  useEffect(() => {
-    setSimilarDomains(SIMILAR_DOMAINS_MOCK);
-  }, []);
-
-  const openBuyModal = () => {
-    setModalType("buy");
-    setIsModalOpen(true);
-  };
-
-  const openOfferModal = () => {
-    setModalType("offer");
-    setIsModalOpen(true);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-sm text-gray-600">Загрузка...</div>
-        </div>
-      </div>
-    );
+  } catch (error) {
+      console.error("Error fetching domain:", error);
   }
 
+  // Fallback MOCK if logic
   if (!domain) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-sm text-gray-600">Домен не найден</div>
-          <a
-            href="/domains"
-            className="text-sm text-black underline mt-2 inline-block"
-          >
-            Вернуться к каталогу
-          </a>
-        </div>
-      </div>
-    );
+      // Mock logic derived from slug
+      const derivedExtension = domainName.includes(".") 
+        ? "." + domainName.split(".").pop() 
+        : ".ru";
+      
+      domain = {
+        id: 0,
+        name: domainName,
+        slug: slug,
+        price: 250000,
+        category: "Бизнес",
+        extension: derivedExtension,
+        description: "Премиальный домен для вашего стартапа. Идеально подходит для бизнеса. (Mock Data)",
+        registeredYear: 2018,
+        traffic: "Высокий",
+        registrationDate: new Date("2018-05-20"),
+        firstRegistrationDate: new Date("2018-05-20"),
+        listedDate: new Date(),
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      
+      console.warn("Using MOCK data for domain detail");
   }
+
+  // 2. Загрузка похожих доменов
+  try {
+      // Пытаемся найти домены той же категории или просто любые активные
+      const allDomainsData = await db
+        .select()
+        .from(domains)
+        .where(sql`${domains.isActive} = true`)
+        .limit(10); // берем побольше чтобы профильтровать если надо
+      
+      if (allDomainsData.length > 0) {
+          // Исключаем текущий
+          similarDomains = allDomainsData
+            .filter(d => d.name !== domainName)
+            .slice(0, 4);
+      }
+  } catch (error) {
+     console.error("Error fetching similar domains:", error);
+  }
+
+  // MOCK fallback for similar if DB failed or empty
+  if (similarDomains.length === 0) {
+      similarDomains = [
+        {
+          id: 101,
+          name: "ai.ru",
+          price: 5000000,
+          category: "Премиум",
+          extension: ".ru",
+          description: "Уникальный двухбуквенный домен.",
+          slug: "ai-ru",
+          registeredYear: 2005,
+          traffic: "Высокий",
+          registrationDate: new Date(),
+          firstRegistrationDate: new Date(),
+          listedDate: new Date(),
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 102,
+          name: "business.net",
+          price: 350000,
+          category: "Бизнес",
+          extension: ".net",
+          description: "Для бизнеса.",
+          slug: "business-net",
+          registeredYear: 2020,
+          traffic: "Средний",
+          registrationDate: new Date(),
+          firstRegistrationDate: new Date(),
+          listedDate: new Date(),
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+      ];
+  }
+
 
   return (
-    <>
-      <ContactModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        domainName={domain.name}
-        type={modalType}
-      />
-
-      <div className="min-h-screen bg-white">
-
-        
-        <Breadcrumbs
-          items={[
-            { label: "Главная", path: "/" },
-            { label: "Домены", path: "/domains" },
-            { label: domain.name },
-          ]}
-        />
-
+    <div className="min-h-screen bg-white">
         <div className="max-w-3xl mx-auto px-4 py-8">
+          <Breadcrumbs
+            items={[
+              { label: "Главная", path: "/" },
+              { label: "Домены", path: "/domains" },
+              { label: domain.name },
+            ]}
+          />
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Основной контент */}
             <div className="lg:col-span-2 space-y-6">
@@ -322,7 +225,7 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
 
               {/* Статистика */}
               <div className="grid grid-cols-3 gap-3">
-                <a
+                <Link
                   href={`/domains?extension=${encodeURIComponent(
                     domain.extension || ""
                   )}`}
@@ -333,7 +236,7 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
                   <div className="text-base font-bold text-black underline decoration-2 underline-offset-4 hover:decoration-gray-500">
                     {domain.extension}
                   </div>
-                </a>
+                </Link>
                 <div className="border-2 border-gray-200 p-3">
                   <Calendar className="w-5 h-5 text-black mb-2" />
                   <div className="text-xs text-gray-500 mb-1">Год</div>
@@ -360,7 +263,7 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
                   </h2>
                   <div className="grid md:grid-cols-2 gap-4">
                     {similarDomains.map((similar) => (
-                      <a
+                      <Link
                         key={similar.name}
                         href={`/domains/${encodeURIComponent(similar.name)}`}
                         className="group bg-white border border-gray-200 p-4 hover:border-black transition-all block"
@@ -382,7 +285,7 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
                             домен {similar.extension}
                           </span>
                         </div>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -399,41 +302,29 @@ export default function DomainDetail({ params }: DomainDetailPageProps) {
                   <div className="text-3xl font-display font-bold text-black mb-4 tracking-tight">
                     {formatPrice(domain.price)}
                   </div>
-                  <button
-                    onClick={openBuyModal}
-                    className="w-full py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all mb-2 flex items-center justify-center gap-2"
-                  >
-                    <Check className="w-4 h-4" />
-                    Купить сейчас
-                  </button>
-                  <button
-                    onClick={openOfferModal}
-                    className="w-full py-2.5 bg-white border border-black text-black text-sm font-medium hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
-                  >
-                    <Mail className="w-4 h-4" />
-                    Сделать предложение
-                  </button>
+                  
+                  {/* Client Component for Interactions */}
+                  <DomainInteractions domainName={domain.name} />
+                  
                 </div>
 
                 <div className="border-t border-gray-200 pt-4 space-y-2 text-xs text-gray-700">
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-black flex-shrink-0" />
-                    <span>Безопасный перевод</span>
+                    {/* Icons hardcoded or imported? Let's use simple SVGs or just text if imports fail, but we have imports */}
+                    {/* Reuse Check icon from import */}
+                    <span>✅ Безопасный перевод</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-black flex-shrink-0" />
-                    <span>Мгновенный перенос</span>
+                    <span>✅ Мгновенный перенос</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-black flex-shrink-0" />
-                    <span>Гарантия возврата</span>
+                    <span>✅ Гарантия возврата</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
 }

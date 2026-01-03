@@ -31,8 +31,8 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://${POSTGRES_USER:-dodomain}:${POSTGRES_PASSWORD:-dodomain_password}@postgres:5433/${POSTGRES_DB:-dodomain}
-      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-https://dodomain.ru}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dodomain}:${POSTGRES_PASSWORD:-dodomain_password}@postgres:5432/${POSTGRES_DB:-dodomain}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://dodomain.ru}
     ports:
       - "3000:3000"
     depends_on:

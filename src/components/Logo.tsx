@@ -7,12 +7,12 @@ export default function Logo() {
   return (
     <Link href="/" className="inline-block group">
       <div className="flex items-baseline font-bold tracking-tighter text-black lowercase text-2xl font-display">
-        <span>dodoma</span>
-        <div className="relative flex flex-col items-center mx-[1px]">
-          <div className="w-1.5 h-1.5 bg-red-500 rounded-full absolute -top-0.5 left-1/2 -translate-x-1/2 opacity-100"></div>
-          <span>i</span>
+        <span>dodom</span>
+        <div className="relative flex flex-col items-center mx-[1px] translate-y-1.5">
+          <div className="w-1.5 h-1.5 bg-red-500 rounded-full absolute -top-2 left-1/2 -translate-x-1/2"></div>
+          <span>a</span>
         </div>
-        <span>n</span>
+        <span>in</span>
       </div>
     </Link>
   );
