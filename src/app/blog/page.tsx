@@ -200,18 +200,20 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-3xl mx-auto px-4 py-10">
+      <div className="max-w-4xl mx-auto px-4 py-10">
         <Breadcrumbs
           items={[{ label: "Главная", path: "/" }, { label: "Блог" }]}
         />
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">Блог</h1>
-          <p className="text-sm text-gray-600 mb-6">
+        <div className="text-center mb-12">
+          <h1 className="font-display font-bold text-4xl text-black mb-3">Блог</h1>
+          <p className="text-gray-500 mb-8 max-w-2xl mx-auto">
             Экспертные советы и рыночные тренды для доменных инвесторов
           </p>
 
           {/* Поиск (Client Component) */}
-          <BlogSearch />
+          <div className="max-w-xl mx-auto">
+            <BlogSearch />
+          </div>
         </div>
 
         {/* Сообщение если нет результатов */}
@@ -223,42 +225,29 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </div>
         )}
 
-        {/* Featured Post - Special Render for first item on first page */}
-        {featured && page === 1 && (
-            // We take the VERY first item of the current page slice for featured?
-            // Or the very first item of the FILTERED list?
-            // Let's use the first item of PAGINATED posts for featured if we want strict page loyalty?
-            // No, 'featured' usually implies 'Stick at top'.
-            // Let's just render paginatedPosts[0] as featured if page==1?
-            
-            // Layout decision:
-            // Render paginatedPosts map.
-            // Inside map, check if index==0 and page==1 -> Render Big Card.
-            // Else Render Small Card.
-            // That's easier for grid layout?
-            // No, grid layout is CSS grid. Big card breaks grid usually.
-            
-            // Let's stick to:
-            // 1. Featured is separate variable.
-            // 2. Grid is separate list.
-            
-             // Override standard slice for Page 1 to separate head
-             <>
-                <BlogCard post={paginatedPosts[0]} isFeatured={true} />
-             </>
+        {/* Featured Post (First item of filtered list) */}
+        {page === 1 && filtered.length > 0 && (
+           <div className="mb-8">
+              <BlogCard post={filtered[0]} isFeatured={true} />
+           </div>
         )}
 
-        {/* Сетка статей - Rest of items */}
-        {paginatedPosts.length > 0 && (
-          <BlogGrid totalItems={filtered.length}>
-            {paginatedPosts.map((post, index) => {
-               // Skip first item on page 1 if we rendered it as featured
-               if (page === 1 && index === 0) return null;
-               
-               return <BlogCard key={post.slug} post={post} />;
-            })}
+        {/* Сетка статей (Rest of items) */}
+        {filtered.length > 1 && (
+          <BlogGrid totalItems={filtered.slice(1).length}>
+            {paginatedPosts
+              // Filter out the featured post (which is filtered[0]) if we are on page 1
+              .filter(p => page === 1 ? p.id !== filtered[0].id : true)
+              .map((post) => (
+                <BlogCard key={post.slug} post={post} />
+            ))}
           </BlogGrid>
         )}
+
+        {/* Счетчик статей */}
+        <div className="mt-8 text-sm text-gray-500">
+            Найдено статей: {filtered.length}
+        </div>
 
         {/* Пагинация */}
         {totalPages > 1 && (

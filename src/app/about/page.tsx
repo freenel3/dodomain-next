@@ -6,6 +6,13 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
  * Страница "О нас"
  * Server Component - статичный контент
  */
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'О нас - dodomain',
+  description: 'dodomain — профессиональная брокерская платформа по реализации премиум доменных имен. Мы специализируемся на подборе и приобретении доменов высшей категории.',
+};
+
 export default function About() {
   return (
     <div className="min-h-screen bg-white">

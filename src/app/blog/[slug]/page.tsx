@@ -32,20 +32,59 @@ interface PageProps {
 }
 
 // Генерация метаданных
+// Генерация метаданных
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   
-  // Quick fix for hardcoded post metadata
+  // 1. Try fetching from DB
+  try {
+      const postData = await db
+        .select()
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+
+      if (postData.length > 0) {
+        return {
+            title: postData[0].metaTitle || postData[0].title,
+            description: postData[0].metaDescription || postData[0].excerpt,
+            openGraph: {
+                title: postData[0].metaTitle || postData[0].title,
+                description: postData[0].metaDescription || postData[0].excerpt || "",
+                type: 'article',
+                publishedTime: postData[0].publishedDate?.toISOString(),
+            }
+        };
+      }
+  } catch (e) {
+      console.error("Error fetching metadata:", e);
+  }
+
+  // 2. Mock Fallback (Consistent with Page Logic)
   if (slug === "domain-zone-2000-hu-guide") {
     return {
       title: "Доменная зона .2000.hu — полное руководство",
       description: "Полный обзор уникальной венгерской доменной зоны .2000.hu.",
     };
   }
+  
+  if (slug === 'how-to-choose-domain-2025') {
+       return {
+           title: 'SEO и домены: что важно знать',
+           description: "Это демонстрационная статья, отображаемая так как база данных недоступна локально.",
+       };
+  }
+  
+  if (slug === 'why-com-domains-expensive') {
+       return {
+           title: 'Безопасность сделок с доменами',
+           description: "Это демонстрационная статья, отображаемая так как база данных недоступна локально.",
+       };
+  }
 
-  // TODO: Fetch from DB for dynamic metadata
   return {
     title: `Статья ${slug}`,
+    description: `Читать статью ${slug} на dodomain.ru`,
   };
 }
 

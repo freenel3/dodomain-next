@@ -6,7 +6,7 @@ import { formatPrice } from "@/lib/utils";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import DomainInteractions from "@/components/domains/DomainInteractions";
 import Link from "next/link";
-import { Globe, Calendar, TrendingUp } from "lucide-react";
+import { Globe, Calendar, TrendingUp, Check } from "lucide-react";
 
 // Тип для домена (дублирование, лучше бы в types.ts, но оставим тут для скорости)
 interface Domain {
@@ -152,6 +152,40 @@ export default async function DomainDetail({ params }: DomainDetailPageProps) {
           isActive: true,
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+        {
+          id: 103,
+          name: "zzsg.ru",
+          price: 350000,
+          category: "Бизнес",
+          extension: ".ru",
+          description: "Для бизнеса.",
+          slug: "zzsg-ru",
+          registeredYear: 2021,
+          traffic: "Средний",
+          registrationDate: new Date(),
+          firstRegistrationDate: new Date(),
+          listedDate: new Date(),
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 104,
+          name: "zzpd.ru",
+          price: 350000,
+          category: "Бизнес",
+          extension: ".ru",
+          description: "Для бизнеса.",
+          slug: "zzpd-ru",
+          registeredYear: 2022,
+          traffic: "Средний",
+          registrationDate: new Date(),
+          firstRegistrationDate: new Date(),
+          listedDate: new Date(),
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
       ];
   }
@@ -257,31 +291,31 @@ export default async function DomainDetail({ params }: DomainDetailPageProps) {
 
               {/* Похожие домены */}
               {similarDomains.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="text-3xl font-display font-bold text-black mb-6 tracking-tight">
-                    Похожие домены
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {similarDomains.map((similar) => (
+                  <div className="mt-12">
+                    <h2 className="text-3xl font-display font-bold text-black mb-6 tracking-tight">
+                      Похожие домены
+                    </h2>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {similarDomains.map((similar) => (
                       <Link
                         key={similar.name}
                         href={`/domains/${encodeURIComponent(similar.name)}`}
-                        className="group bg-white border border-gray-200 p-4 hover:border-black transition-all block"
+                        className="group bg-white border border-gray-200 p-3 flex flex-col hover:border-black transition-all relative"
                       >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="px-1.5 py-0.5 bg-gray-100 text-gray-900 text-[10px] font-medium rounded-sm">
                             {similar.category}
                           </div>
-                          <div className="text-lg font-display font-bold text-black tracking-tight">
+                          <div className="text-base font-display font-bold text-black tracking-tight">
                             {formatPrice(similar.price)}
                           </div>
                         </div>
-                        <h3 className="text-xl font-display font-bold text-black mb-1.5 group-hover:underline tracking-tight">
+                        <h3 className="text-xl font-display font-bold text-black mb-1 group-hover:underline tracking-tight">
                           {similar.name}
                         </h3>
-                        <div className="flex items-center gap-1.5 text-gray-600">
-                          <Globe className="w-3.5 h-3.5" />
-                          <span className="text-xs">
+                        <div className="flex items-center gap-1 text-gray-400 mt-auto">
+                          <Globe className="w-3 h-3" />
+                          <span className="text-[10px]">
                             домен {similar.extension}
                           </span>
                         </div>
@@ -310,15 +344,16 @@ export default async function DomainDetail({ params }: DomainDetailPageProps) {
 
                 <div className="border-t border-gray-200 pt-4 space-y-2 text-xs text-gray-700">
                   <div className="flex items-center gap-2">
-                    {/* Icons hardcoded or imported? Let's use simple SVGs or just text if imports fail, but we have imports */}
-                    {/* Reuse Check icon from import */}
-                    <span>✅ Безопасный перевод</span>
+                    <Check className="w-4 h-4 text-gray-400" />
+                    <span>Безопасный перевод</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span>✅ Мгновенный перенос</span>
+                    <Check className="w-4 h-4 text-gray-400" />
+                    <span>Мгновенный перенос</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span>✅ Гарантия возврата</span>
+                    <Check className="w-4 h-4 text-gray-400" />
+                    <span>Гарантия возврата</span>
                   </div>
                 </div>
               </div>

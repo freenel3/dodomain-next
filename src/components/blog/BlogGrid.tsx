@@ -15,10 +15,7 @@ export default function BlogGrid({
         {children}
       </div>
 
-      {/* Информация о количестве */}
-      {totalItems !== undefined && (
-        <div className="text-sm text-gray-600">Найдено статей: {totalItems}</div>
-      )}
+
     </div>
   );
 }

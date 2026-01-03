@@ -4,6 +4,13 @@ import Link from 'next/link';
  * 404 страница - не найдено
  * Server Component - статичный контент
  */
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Страница не найдена - 404',
+  description: 'Запрашиваемая страница не существует.',
+};
+
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-4">

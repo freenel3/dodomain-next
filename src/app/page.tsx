@@ -156,29 +156,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Domains */}
-      <section className="py-12 bg-gray-50">
-          <div className="max-w-5xl mx-auto px-4">
-              <div className="text-center mb-10">
-                  <h2 className="text-3xl font-display font-bold text-black mb-2">Новые поступления</h2>
-                  <p className="text-gray-500">Только что добавленные домены</p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 {featuredDomains.map(domain => (
-                     <DomainCard key={domain.id} domain={domain} />
-                 ))}
-              </div>
-              
-              <div className="text-center mt-10">
-                  <Link href="/domains" className="text-black font-medium hover:underline text-sm">
-                      Посмотреть все домены &rarr;
-                  </Link>
-              </div>
-          </div>
-      </section>
 
-      {/* Features Section */}
       <section className="bg-white py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="text-center mb-8">
@@ -230,35 +208,7 @@ export default async function Home() {
         </div>
       </section>
       
-      {/* Blog Section */}
-      <section className="py-12 bg-gray-50 border-t border-gray-200">
-           <div className="max-w-4xl mx-auto px-4">
-               <div className="flex justify-between items-end mb-8">
-                   <div>
-                       <h2 className="text-2xl font-bold font-display text-black">Журнал</h2>
-                       <p className="text-sm text-gray-500 mt-1">Инсайты рынка доменов</p>
-                   </div>
-                   <Link href="/blog" className="text-sm font-medium hover:underline text-black">
-                       Все статьи
-                   </Link>
-               </div>
-               
-               <div className="grid md:grid-cols-3 gap-6">
-                   {recentPosts.map(post => (
-                       <Link key={post.slug} href={`/blog/${post.slug}`} className="group block h-full">
-                           <div className="bg-white border border-gray-200 h-full p-5 hover:border-black transition-colors flex flex-col">
-                               <div className="text-xs text-gray-500 mb-2 uppercase tracking-wide font-medium">{post.category}</div>
-                               <h3 className="text-lg font-bold text-black mb-2 group-hover:underline leading-snug">{post.title}</h3>
-                               <p className="text-sm text-gray-600 line-clamp-3 mb-4 flex-grow">{post.excerpt}</p>
-                               <div className="text-xs font-medium text-black mt-auto flex items-center gap-1">
-                                   Читать далее <ArrowRight className="w-3 h-3" />
-                               </div>
-                           </div>
-                       </Link>
-                   ))}
-               </div>
-           </div>
-      </section>
+
 
       {/* CTA Section */}
       <section className="max-w-3xl mx-auto px-4 py-12">
