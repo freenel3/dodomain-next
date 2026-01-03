@@ -69,10 +69,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
   },
-  manifest: "/manifest.json",
   verification: {
     // Добавьте здесь коды верификации для Google, Yandex и т.д.
     // google: 'your-google-verification-code',
