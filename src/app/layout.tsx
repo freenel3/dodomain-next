@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     creator: SEO_DEFAULTS.TWITTER_HANDLE,
   },
   icons: {
-    icon: "/favicon.ico?v=2",
+    icon: "/icon.ico",
   },
   verification: {
     // Добавьте здесь коды верификации для Google, Yandex и т.д.
