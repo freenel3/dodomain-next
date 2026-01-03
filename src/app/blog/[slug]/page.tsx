@@ -392,38 +392,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </article>
 
         {/* Similar Domains */}
-        {similarDomains.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-3xl font-display font-bold text-black mb-6 tracking-tight">
-              Похожие домены
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {similarDomains.map((domain) => (
-                <a
-                  key={domain.name}
-                  href={`/domains/${encodeURIComponent(domain.name)}`}
-                  className="group bg-white border border-gray-200 p-4 hover:border-black transition-all block"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="px-2 py-0.5 bg-gray-100 text-gray-900 text-xs font-medium">
-                      {domain.category}
-                    </div>
-                    <div className="text-lg font-display font-bold text-black tracking-tight">
-                      {domain.price.toLocaleString("ru-RU")} ₽
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-display font-bold text-black mb-1.5 group-hover:underline tracking-tight">
-                    {domain.name}
-                  </h3>
-                  <div className="flex items-center gap-1.5 text-gray-600">
-                    <Globe className="w-3.5 h-3.5" />
-                    <span className="text-xs">домен {domain.extension}</span>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+
       </div>
     </div>
   );
